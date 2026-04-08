@@ -1,0 +1,92 @@
+name: macOS Build
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  macos-nightly:
+    name: macOS (Nightly)
+    if: github.ref == 'refs/heads/main'
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          brew install gjs gtk4 libadwaita libsoup gobject-introspection \
+            adwaita-icon-theme gdk-pixbuf meson ninja node dylibbundler \
+            create-dmg librsvg
+
+      - name: Build app bundle
+        run: bash build-aux/macos/bundle.sh
+
+      - name: Create DMG
+        run: bash build-aux/macos/create-dmg.sh SaveButton.app SaveButton-dev-arm64.dmg
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: savebutton-macos-nightly
+          path: SaveButton-*-arm64.dmg
+
+  macos-release:
+    name: macOS (Release)
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          brew install gjs gtk4 libadwaita libsoup gobject-introspection \
+            adwaita-icon-theme gdk-pixbuf meson ninja node dylibbundler \
+            create-dmg librsvg
+
+      - name: Import signing certificate
+        env:
+          MACOS_CERTIFICATE_P12: ${{ secrets.MACOS_CERTIFICATE_P12 }}
+          MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        run: |
+          CERT_FILE=$(mktemp /tmp/cert.XXXXXX.p12)
+          echo "$MACOS_CERTIFICATE_P12" | base64 --decode > "$CERT_FILE"
+          KEYCHAIN="build.keychain"
+          security create-keychain -p "" "$KEYCHAIN"
+          security default-keychain -s "$KEYCHAIN"
+          security unlock-keychain -p "" "$KEYCHAIN"
+          security import "$CERT_FILE" -k "$KEYCHAIN" -P "$MACOS_CERTIFICATE_PASSWORD" -T /usr/bin/codesign
+          security set-key-partition-list -S apple-tool:,apple: -s -k "" "$KEYCHAIN"
+          rm "$CERT_FILE"
+
+      - name: Extract version from tag
+        id: version
+        run: echo "version=${GITHUB_REF_NAME#v}" >> $GITHUB_OUTPUT
+
+      - name: Build app bundle
+        run: bash build-aux/macos/bundle.sh
+
+      - name: Create signed and notarized DMG
+        env:
+          MACOS_SIGNING_IDENTITY: ${{ secrets.MACOS_SIGNING_IDENTITY }}
+          MACOS_NOTARIZE_APPLE_ID: ${{ secrets.MACOS_NOTARIZE_APPLE_ID }}
+          MACOS_NOTARIZE_PASSWORD: ${{ secrets.MACOS_NOTARIZE_PASSWORD }}
+          MACOS_NOTARIZE_TEAM_ID: ${{ secrets.MACOS_NOTARIZE_TEAM_ID }}
+        run: bash build-aux/macos/create-dmg.sh SaveButton.app SaveButton-${{ steps.version.outputs.version }}-arm64.dmg
+
+      - name: Attach to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: SaveButton-*-arm64.dmg

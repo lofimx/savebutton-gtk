@@ -2,10 +2,11 @@
 # frozen_string_literal: true
 
 # Kaya Release Script
-# Automates the Flathub release process:
+# Automates the release process:
 #   Step 1: Determine and confirm new version
 #   Step 2: Update version in all source files (including release manifest)
 #   Step 3: Commit, tag, and push
+#   Step 4: Build macOS Intel DMG (auto on macOS, instructions on Linux)
 
 require "json"
 require "date"
@@ -156,5 +157,24 @@ confirm("Push (with tags)?")
 run("git push && git push --tags")
 puts "  Pushed to remote"
 
+# --- Step 4: macOS Intel DMG ---
+
 puts
+puts "=== Step 4: macOS Intel DMG ==="
+puts
+
+if RUBY_PLATFORM.include?("darwin")
+  confirm("Build and upload Intel DMG now?")
+  intel_script = File.join(ROOT, "bin", "release-macos-intel.rb")
+  system("ruby", intel_script) || abort("Intel DMG build failed.")
+else
+  puts "  Linux detected — cannot build macOS Intel DMG on this machine."
+  puts
+  puts "  On your Intel Mac, run:"
+  puts "    cd /path/to/savebutton-gtk"
+  puts "    git pull"
+  puts "    ruby bin/release-macos-intel.rb"
+  puts
+end
+
 puts "=== Release #{new_version} complete ==="

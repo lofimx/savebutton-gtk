@@ -8,12 +8,12 @@ Kaya is a local-first bookmarking system. Sort of. It might be described as the 
 
 * [x] attempt throw-away WPF port of existing GTK app
 * [x] add features from mobile app: search, preview, etc.
-* [ ] turn `.gitlab-ci.yml` into GitHub Actions
-* [ ] spike native host <=> WXT local sync
-* [ ] fix MacOS bugs (About window)
-* [ ] MacOS build - GHA
-* [ ] full WPF port
-* [ ] Windows build - GHA
+* [x] turn `.gitlab-ci.yml` into GitHub Actions
+* [x] spike native host <=> WXT local sync
+* [x] fix MacOS bugs (About window)
+* [x] MacOS build - GHA
+* [x] full WPF port
+* [x] Windows build - GHA
 
 ## Architecture
 
@@ -131,7 +131,17 @@ $ make macos-dmg
 
 ### Releasing
 
-* `/bin/release.rb`
+Run `ruby bin/release.rb` to cut a new version. The script bumps versions, commits, tags, and pushes.
+
+The arm64 macOS DMG is built automatically by GitHub Actions. The Intel (x86_64) DMG must be built locally on an Intel Mac because GitHub's x64 macOS runners are paid. If `release.rb` detects macOS, it runs the Intel build automatically. On Linux, it prints instructions:
+
+```
+cd /path/to/savebutton-gtk
+git pull
+ruby bin/release-macos-intel.rb
+```
+
+See [doc/distros/DISTROS.md](doc/distros/DISTROS.md) for full release procedures.
 
 ## Dev Process
 

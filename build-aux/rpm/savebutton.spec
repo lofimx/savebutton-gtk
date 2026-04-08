@@ -20,7 +20,6 @@ BuildRequires:  gettext
 BuildRequires:  desktop-file-utils
 BuildRequires:  libappstream-glib
 BuildRequires:  glib2-devel
-BuildRequires:  typescript
 
 Requires:       gjs >= 1.54
 Requires:       gtk4
@@ -35,6 +34,8 @@ application for GNOME desktop environments.
 %autosetup -n kaya-gtk-%{version}
 
 %build
+npm install --include=dev
+export PATH="$PWD/node_modules/.bin:$PATH"
 %meson
 %meson_build
 

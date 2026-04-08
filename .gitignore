@@ -25,7 +25,8 @@ builddir-macos/
 *.iconset/
 *.icns
 
-flargon
+/flargon
+/tmp
 
 AGENTS.md
 CLAUDE.md

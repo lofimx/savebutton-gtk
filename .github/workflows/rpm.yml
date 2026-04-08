@@ -25,7 +25,7 @@ jobs:
             meson ninja-build nodejs npm \
             gjs-devel gtk4-devel libadwaita-devel \
             libsecret-devel gettext desktop-file-utils \
-            libappstream-glib glib2-devel typescript \
+            libappstream-glib glib2-devel \
             rpm-build rpmdevtools
 
       - uses: actions/checkout@v4
@@ -63,7 +63,7 @@ jobs:
             meson ninja-build nodejs npm \
             gjs-devel gtk4-devel libadwaita-devel \
             libsecret-devel gettext desktop-file-utils \
-            libappstream-glib glib2-devel typescript \
+            libappstream-glib glib2-devel \
             rpm-build rpmdevtools
 
       - uses: actions/checkout@v4

@@ -30,8 +30,12 @@ jobs:
             libsecret-1-dev gettext desktop-file-utils \
             appstream-util libglib2.0-dev
 
+      - name: Install npm dependencies
+        run: npm install --include=dev
+
       - name: Build
         run: |
+          export PATH="$PWD/node_modules/.bin:$PATH"
           meson setup builddir --prefix=/usr
           meson compile -C builddir
 
@@ -71,8 +75,12 @@ jobs:
             libsecret-1-dev gettext desktop-file-utils \
             appstream-util libglib2.0-dev
 
+      - name: Install npm dependencies
+        run: npm install --include=dev
+
       - name: Build
         run: |
+          export PATH="$PWD/node_modules/.bin:$PATH"
           meson setup builddir --prefix=/usr
           meson compile -C builddir
 
