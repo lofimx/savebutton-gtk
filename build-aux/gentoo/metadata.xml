@@ -6,8 +6,8 @@
 		<name>Steven Deobald</name>
 	</maintainer>
 	<upstream>
-		<remote-id type="github">lofimx/kaya-gtk</remote-id>
-		<bugs-to>https://github.com/lofimx/kaya-gtk/issues</bugs-to>
+		<remote-id type="github">lofimx/savebutton-gtk</remote-id>
+		<bugs-to>https://github.com/lofimx/savebutton-gtk/issues</bugs-to>
 	</upstream>
 	<longdescription lang="en">
 		Save Button is a simple, immutable, local-first note-taking

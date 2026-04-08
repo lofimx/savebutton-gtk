@@ -54,10 +54,10 @@ parts:
       curl -fsSL "https://nodejs.org/dist/v24.14.0/node-v24.14.0-linux-${NODE_ARCH}.tar.xz" \
         | tar -xJ --strip-components=1 -C /usr
       npm install --include=dev
-      npm install -g typescript
     override-build: |
       cd $CRAFT_PART_SRC
-      export PATH="$PWD/node_modules/.bin:$PATH"
+      # Symlink project tsc into /usr/bin so meson's find_program('tsc') finds it
+      ln -sf "$PWD/node_modules/.bin/tsc" /usr/bin/tsc
       npm run bundle:temporal
       npm run bundle:marked
       craftctl default

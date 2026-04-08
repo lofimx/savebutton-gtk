@@ -41,7 +41,7 @@
       "sources": [
         {
           "type": "git",
-          "url": "https://github.com/lofimx/kaya-gtk.git",
+          "url": "https://github.com/lofimx/savebutton-gtk.git",
           "tag": "v0.2.15",
           "commit": "c1cb8ad42b73e8feed795492604f0bb4dbe8ba6a"
         },

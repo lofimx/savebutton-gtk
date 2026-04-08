@@ -3,7 +3,7 @@
   "version": "0.2.15",
   "description": "Simple bookmark and notes manager",
   "main": "src/main.ts",
-  "repository": "https://github.com/lofimx/kaya-gtk",
+  "repository": "https://github.com/lofimx/savebutton-gtk",
   "author": "Steven Deobald <sdeobald@gnome.org>",
   "license": "AGPL-3.0-only",
   "dependencies": {

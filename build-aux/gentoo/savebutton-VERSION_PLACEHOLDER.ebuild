@@ -6,12 +6,12 @@ EAPI=8
 inherit meson xdg
 
 DESCRIPTION="Simple bookmark and notes manager"
-HOMEPAGE="https://github.com/lofimx/kaya-gtk"
+HOMEPAGE="https://github.com/lofimx/savebutton-gtk"
 SRC_URI="
-	https://github.com/lofimx/kaya-gtk/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz
-	https://github.com/lofimx/kaya-gtk/releases/download/v${PV}/${P}-deps.tar.xz
+	https://github.com/lofimx/savebutton-gtk/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz
+	https://github.com/lofimx/savebutton-gtk/releases/download/v${PV}/${P}-deps.tar.xz
 "
-S="${WORKDIR}/kaya-gtk-${PV}"
+S="${WORKDIR}/savebutton-gtk-${PV}"
 
 # AGPL-3 for the application; MIT for bundled marked and temporal-polyfill
 LICENSE="AGPL-3 MIT"

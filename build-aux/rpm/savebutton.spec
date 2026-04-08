@@ -3,7 +3,7 @@ Version:        VERSION_PLACEHOLDER
 Release:        1%{?dist}
 Summary:        Simple bookmark and notes manager
 License:        AGPL-3.0-only
-URL:            https://github.com/lofimx/kaya-gtk
+URL:            https://github.com/lofimx/savebutton-gtk
 Source0:        %{name}-%{version}.tar.gz
 
 %global debug_package %{nil}
@@ -31,7 +31,7 @@ Save Button is a local-first note-taking and bookmarking
 application for GNOME desktop environments.
 
 %prep
-%autosetup -n kaya-gtk-%{version}
+%autosetup -n savebutton-gtk-%{version}
 
 %build
 npm install --include=dev

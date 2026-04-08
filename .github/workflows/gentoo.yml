@@ -57,7 +57,7 @@ jobs:
           # Create deps tarball containing node_modules and vendor bundles
           tar cJf "/tmp/savebutton-${VERSION}-deps.tar.xz" \
             -C "$GITHUB_WORKSPACE" \
-            --transform "s,^,kaya-gtk-${VERSION}/," \
+            --transform "s,^,savebutton-gtk-${VERSION}/," \
             node_modules src/vendor/temporal.js src/vendor/marked.js
 
       - name: Set up overlay and ebuild
@@ -85,9 +85,9 @@ jobs:
           # Source tarball (without node_modules — those come from deps tarball)
           tar czf "${DISTDIR}/savebutton-${VERSION}.tar.gz" \
             -C "$GITHUB_WORKSPACE/.." \
-            --transform "s,^kaya-gtk,kaya-gtk-${VERSION}," \
+            --transform "s,^savebutton-gtk,savebutton-gtk-${VERSION}," \
             --exclude=.git --exclude=node_modules \
-            kaya-gtk
+            savebutton-gtk
 
           # Deps tarball
           cp "/tmp/savebutton-${VERSION}-deps.tar.xz" "${DISTDIR}/"
@@ -160,7 +160,7 @@ jobs:
 
           tar cJf "/tmp/savebutton-${VERSION}-deps.tar.xz" \
             -C "$GITHUB_WORKSPACE" \
-            --transform "s,^,kaya-gtk-${VERSION}/," \
+            --transform "s,^,savebutton-gtk-${VERSION}/," \
             node_modules src/vendor/temporal.js src/vendor/marked.js
 
       - name: Set up overlay and ebuild
@@ -185,9 +185,9 @@ jobs:
 
           tar czf "${DISTDIR}/savebutton-${VERSION}.tar.gz" \
             -C "$GITHUB_WORKSPACE/.." \
-            --transform "s,^kaya-gtk,kaya-gtk-${VERSION}," \
+            --transform "s,^savebutton-gtk,savebutton-gtk-${VERSION}," \
             --exclude=.git --exclude=node_modules \
-            kaya-gtk
+            savebutton-gtk
 
           cp "/tmp/savebutton-${VERSION}-deps.tar.xz" "${DISTDIR}/"
 

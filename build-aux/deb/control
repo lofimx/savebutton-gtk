@@ -5,7 +5,7 @@ Priority: optional
 Architecture: amd64
 Depends: gjs (>= 1.54), gir1.2-gtk-4.0, gir1.2-adw-1, gir1.2-secret-1, gir1.2-soup-3.0, libglib2.0-bin
 Maintainer: Steven Deobald <sdeobald@gnome.org>
-Homepage: https://github.com/lofimx/kaya-gtk
+Homepage: https://github.com/lofimx/savebutton-gtk
 Description: Simple bookmark and notes manager
  Save Button is a local-first note-taking and bookmarking
  application for GNOME desktop environments.

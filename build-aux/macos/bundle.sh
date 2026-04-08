@@ -50,7 +50,7 @@ if [ -d "$BUILDDIR" ]; then
 fi
 
 PKG_CONFIG_PATH="${BREW_PREFIX}/lib/pkgconfig:${BREW_PREFIX}/share/pkgconfig" \
-PATH="${BREW_PREFIX}/bin:$PATH" \
+PATH="$PROJECT_ROOT/node_modules/.bin:${BREW_PREFIX}/bin:$PATH" \
   meson setup "$BUILDDIR" \
     --prefix="$RESOURCES" \
     --datadir=share \

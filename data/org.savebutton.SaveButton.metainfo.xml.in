@@ -43,11 +43,11 @@
   <screenshots>
     <screenshot type="default">
       <caption>Main window for searching bookmarks</caption>
-      <image>https://raw.githubusercontent.com/lofimx/kaya-gtk/v0.2.9/data/screenshots/screenshot-1.png</image>
+      <image>https://raw.githubusercontent.com/lofimx/savebutton-gtk/v0.2.9/data/screenshots/screenshot-1.png</image>
     </screenshot>
     <screenshot>
       <caption>Main window for entering bookmarks</caption>
-      <image>https://raw.githubusercontent.com/lofimx/kaya-gtk/v0.2.9/data/screenshots/screenshot-2.png</image>
+      <image>https://raw.githubusercontent.com/lofimx/savebutton-gtk/v0.2.9/data/screenshots/screenshot-2.png</image>
     </screenshot>
   </screenshots>
 
@@ -80,9 +80,9 @@
     </release>
   </releases>
 
-  <url type="homepage">https://github.com/lofimx/kaya-gtk</url>
-  <url type="bugtracker">https://github.com/lofimx/kaya-gtk/issues</url>
-  <url type="vcs-browser">https://github.com/lofimx/kaya-gtk</url>
+  <url type="homepage">https://github.com/lofimx/savebutton-gtk</url>
+  <url type="bugtracker">https://github.com/lofimx/savebutton-gtk/issues</url>
+  <url type="vcs-browser">https://github.com/lofimx/savebutton-gtk</url>
 
   <branding>
     <color type="primary" scheme_preference="light">#f1e1bf</color>
