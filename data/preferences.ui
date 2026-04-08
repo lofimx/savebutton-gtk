@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
+  <template class="Gjs_PreferencesWindow" parent="AdwPreferencesWindow">
+    <property name="title" translatable="yes">Preferences</property>
+    <property name="default-width">500</property>
+    <property name="default-height">550</property>
+    <property name="search-enabled">false</property>
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="yes">Sync</property>
+        <property name="icon-name">update-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Server</property>
+            <property name="description" translatable="yes">Configure synchronization with a server.</property>
+            <child>
+              <object class="AdwEntryRow" id="serverUrlEntry">
+                <property name="title" translatable="yes">Server URL</property>
+                <property name="input-purpose">url</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Account</property>
+            <child>
+              <object class="AdwEntryRow" id="emailEntry">
+                <property name="title" translatable="yes">Email</property>
+                <property name="input-purpose">email</property>
+              </object>
+            </child>
+            <child>
+              <object class="AdwPasswordEntryRow" id="passwordEntry">
+                <property name="title" translatable="yes">Password</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="halign">end</property>
+                <property name="margin-top">8</property>
+                <child>
+                  <object class="GtkButton" id="clearCredentialsButton">
+                    <property name="label" translatable="yes">Clear</property>
+                    <style>
+                      <class name="destructive-action"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkButton" id="saveCredentialsButton">
+                    <property name="label" translatable="yes">Save</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Status</property>
+            <child>
+              <object class="AdwActionRow" id="syncStatusRow">
+                <property name="title" translatable="yes">Sync Status</property>
+                <property name="subtitle" translatable="yes">Not configured</property>
+                <child type="suffix">
+                  <object class="GtkButton" id="forceSyncButton">
+                    <property name="label" translatable="yes">Force Sync</property>
+                    <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="AdwPreferencesPage">
+        <property name="title" translatable="yes">Browser</property>
+        <property name="icon-name">globe-alt2-symbolic</property>
+        <child>
+          <object class="AdwPreferencesGroup">
+            <property name="title" translatable="yes">Local Browser Sync</property>
+            <property name="description" translatable="yes">Accept files from the Save Button browser extension over a local HTTP connection.</property>
+            <child>
+              <object class="AdwSpinRow" id="nativeHostPortRow">
+                <property name="title" translatable="yes">Port</property>
+                <property name="subtitle" translatable="yes">Restart the app after changing the port.</property>
+                <property name="adjustment">
+                  <object class="GtkAdjustment">
+                    <property name="lower">1024</property>
+                    <property name="upper">65535</property>
+                    <property name="step-increment">1</property>
+                    <property name="page-increment">100</property>
+                    <property name="value">21420</property>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

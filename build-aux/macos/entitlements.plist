@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!-- SpiderMonkey (GJS runtime) requires JIT compilation -->
+    <key>com.apple.security.cs.allow-jit</key>
+    <true/>
+    <!-- SpiderMonkey legacy JIT paths may allocate unsigned executable memory -->
+    <key>com.apple.security.cs.allow-unsigned-executable-memory</key>
+    <true/>
+    <!-- Bundled dylibs are signed with our Developer ID, not Apple's -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+    <!-- DYLD_LIBRARY_PATH is needed for GObject Introspection typelib dlopen -->
+    <key>com.apple.security.cs.allow-dyld-environment-variables</key>
+    <true/>
+</dict>
+</plist>

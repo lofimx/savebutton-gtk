@@ -1,0 +1,40 @@
+{
+  "name": "kaya",
+  "version": "0.2.15",
+  "description": "Simple bookmark and notes manager",
+  "main": "src/main.ts",
+  "repository": "https://github.com/lofimx/kaya-gtk",
+  "author": "Steven Deobald <sdeobald@gnome.org>",
+  "license": "AGPL-3.0-only",
+  "dependencies": {
+    "marked": "^17.0.4",
+    "temporal-polyfill": "^0.3.0"
+  },
+  "devDependencies": {
+    "@eslint/json": "^0.14.0",
+    "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^5.33.0",
+    "@typescript-eslint/parser": "^5.33.0",
+    "esbuild": "^0.27.2",
+    "eslint": "^8.42.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "jest": "^30.2.0",
+    "prettier": "^2.8.8",
+    "ts-jest": "^29.4.6",
+    "typescript": "^5.9.3"
+  },
+  "scripts": {
+    "build": "tsc --strict",
+    "bundle:temporal": "node build-aux/bundle-temporal.mjs",
+    "bundle:marked": "node build-aux/bundle-marked.mjs",
+    "typecheck": "tsc --strict --noEmit",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage"
+  },
+  "packageManager": "yarn@4.3.1",
+  "prettier": {
+    "tabWidth": 2
+  }
+}

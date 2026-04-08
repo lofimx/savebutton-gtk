@@ -1,0 +1,89 @@
+name: RPM Build
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  rpm-nightly:
+    name: RPM (Nightly)
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    container:
+      image: fedora:41
+
+    steps:
+      - name: Install dependencies
+        run: |
+          dnf install -y git \
+            meson ninja-build nodejs npm \
+            gjs-devel gtk4-devel libadwaita-devel \
+            libsecret-devel gettext desktop-file-utils \
+            libappstream-glib glib2-devel typescript \
+            rpm-build rpmdevtools
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Build RPM
+        run: |
+          VERSION=$(meson introspect --projectinfo 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['version'])" 2>/dev/null || grep "version:" meson.build | head -1 | sed "s/.*'\\(.*\\)'.*/\\1/")
+          rpmdev-setuptree
+          sed "s/VERSION_PLACEHOLDER/${VERSION}/" build-aux/rpm/savebutton.spec > ~/rpmbuild/SPECS/savebutton.spec
+          tar czf ~/rpmbuild/SOURCES/savebutton-${VERSION}.tar.gz \
+            --transform "s,^,kaya-gtk-${VERSION}/," \
+            --exclude=.git --exclude=node_modules .
+          rpmbuild -ba ~/rpmbuild/SPECS/savebutton.spec
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: savebutton-rpm-nightly
+          path: ~/rpmbuild/RPMS/**/*.rpm
+
+  rpm-release:
+    name: RPM (Release)
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: fedora:41
+
+    steps:
+      - name: Install dependencies
+        run: |
+          dnf install -y git \
+            meson ninja-build nodejs npm \
+            gjs-devel gtk4-devel libadwaita-devel \
+            libsecret-devel gettext desktop-file-utils \
+            libappstream-glib glib2-devel typescript \
+            rpm-build rpmdevtools
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Build RPM
+        run: |
+          VERSION=$(meson introspect --projectinfo 2>/dev/null | python3 -c "import sys,json; print(json.load(sys.stdin)['version'])" 2>/dev/null || grep "version:" meson.build | head -1 | sed "s/.*'\\(.*\\)'.*/\\1/")
+          rpmdev-setuptree
+          sed "s/VERSION_PLACEHOLDER/${VERSION}/" build-aux/rpm/savebutton.spec > ~/rpmbuild/SPECS/savebutton.spec
+          tar czf ~/rpmbuild/SOURCES/savebutton-${VERSION}.tar.gz \
+            --transform "s,^,kaya-gtk-${VERSION}/," \
+            --exclude=.git --exclude=node_modules .
+          rpmbuild -ba ~/rpmbuild/SPECS/savebutton.spec
+
+      - name: Copy RPM to workspace
+        run: cp ~/rpmbuild/RPMS/**/*.rpm .
+
+      - name: Attach to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: "*.rpm"

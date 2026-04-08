@@ -1,0 +1,27 @@
+
+settings.local.json
+
+_build/
+.vscode/
+.flatpak/
+node_modules/
+.fenv/
+.flatpak-builder/
+.yarn/
+coverage/
+foo.png
+repo/
+*.flatpak
+eslint-report.txt
+flatpak_app/
+flatpak_prod/
+_build_install/
+eslint-report.txt
+
+# macOS build artifacts
+builddir-macos/
+*.app
+*.dmg
+*.iconset/
+*.icns
+

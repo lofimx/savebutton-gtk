@@ -1,0 +1,45 @@
+{
+  "id": "org.savebutton.SaveButton",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "49",
+  "sdk": "org.gnome.Sdk",
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.node24",
+    "org.freedesktop.Sdk.Extension.typescript"
+  ],
+  "tags": ["nightly"],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/node24/bin:/usr/lib/sdk/typescript/bin",
+    "build-args": ["--share=network"]
+  },
+  "command": "org.savebutton.SaveButton",
+  "finish-args": [
+    "--share=network",
+    "--device=dri",
+    "--socket=wayland",
+    "--filesystem=~/.kaya:create"
+  ],
+  "cleanup": [
+    "/include",
+    "/lib/pkgconfig",
+    "/man",
+    "/share/doc",
+    "/share/gtk-doc",
+    "/share/man",
+    "/share/pkgconfig",
+    "*.la",
+    "*.a"
+  ],
+  "modules": [
+    {
+      "name": "kaya",
+      "buildsystem": "meson",
+      "sources": [
+        {
+          "type": "dir",
+          "path": "../.."
+        }
+      ]
+    }
+  ]
+}

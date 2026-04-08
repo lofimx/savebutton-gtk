@@ -1,0 +1,59 @@
+@import './tada.css';
+
+.search-result-card {
+  padding: 12px;
+  min-width: 140px;
+  min-height: 100px;
+  overflow: hidden;
+}
+
+.search-result-card .tile-date {
+  opacity: 0;
+  transition: opacity 200ms ease;
+}
+
+.search-result-card:hover .tile-date {
+  opacity: 1;
+}
+
+.tile-image {
+  border-radius: 6px;
+}
+
+.fab {
+  min-width: 56px;
+  min-height: 56px;
+}
+
+.tags-container {
+  border: 1px solid alpha(currentColor, 0.15);
+  border-radius: 6px;
+  padding: 4px;
+  min-height: 32px;
+}
+
+.tags-container:focus-within {
+  border-color: @accent_color;
+  outline: 2px solid alpha(@accent_color, 0.3);
+  outline-offset: -1px;
+}
+
+.tags-entry {
+  border: none;
+  outline: none;
+  box-shadow: none;
+  min-height: 24px;
+}
+
+.tag-pill {
+  border-radius: 999px;
+  padding: 2px 8px;
+  margin: 2px;
+  min-height: 20px;
+  background-color: @accent_bg_color;
+  color: @accent_fg_color;
+}
+
+.tag-pill label {
+  margin: 0;
+}

@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Save Button
+Comment=Bookmark manager
+Exec=org.savebutton.SaveButton
+Icon=org.savebutton.SaveButton
+Terminal=false
+Type=Application
+Categories=Utility;
+StartupNotify=true
+StartupWMClass=org.savebutton.SaveButton
+Keywords=bookmark;kaya;savebutton;

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<gresources>
+  <gresource prefix="/org/savebutton/SaveButton">
+    <file preprocess="xml-stripblanks">gtk/help-overlay.ui</file>
+    <file preprocess="xml-stripblanks">preferences.ui</file>
+    <file>style.css</file>
+    <file>tada.css</file>
+    <file preprocess="xml-stripblanks">everything_window.ui</file>
+    <file preprocess="xml-stripblanks">new_save_window.ui</file>
+    <file preprocess="xml-stripblanks">preview_window.ui</file>
+  </gresource>
+  <gresource prefix="/org/savebutton/SaveButton/icons/scalable/actions">
+    <file preprocess="xml-stripblanks" alias="pin-symbolic.svg">icons/pin-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="bookmark-filled-symbolic.svg">icons/bookmark-filled-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="update-symbolic.svg">icons/update-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="globe-alt2-symbolic.svg">icons/globe-alt2-symbolic.svg</file>
+  </gresource>
+</gresources>

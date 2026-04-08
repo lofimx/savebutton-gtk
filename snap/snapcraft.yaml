@@ -1,0 +1,63 @@
+name: savebutton
+adopt-info: kaya
+summary: Simple bookmark and notes manager
+description: |
+  Save Button is a simple, immutable, local-first note-taking
+  and bookmarking app. Store, search, and sync your notes
+  and bookmarks.
+grade: stable
+confinement: strict
+base: core24
+
+plugs:
+  dot-kaya:
+    interface: personal-files
+    read:
+      - $HOME/.kaya
+    write:
+      - $HOME/.kaya
+
+apps:
+  savebutton:
+    extensions: [gnome]
+    command: usr/bin/org.savebutton.SaveButton
+    plugs:
+      - network
+      - dot-kaya
+      - password-manager-service
+
+parts:
+  kaya:
+    plugin: meson
+    source: .
+    meson-parameters:
+      - --prefix=/usr
+    build-packages:
+      - gjs
+      - libgjs-dev
+      - libgtk-4-dev
+      - libadwaita-1-dev
+      - libsecret-1-dev
+      - gettext
+      - desktop-file-utils
+    stage-packages:
+      - gjs
+      - gir1.2-secret-1
+    override-pull: |
+      craftctl default
+      VERSION=$(grep "version:" $CRAFT_PART_SRC/meson.build | head -1 | sed "s/.*'\(.*\)'.*/\1/")
+      craftctl set version="$VERSION"
+      ARCH=$(dpkg --print-architecture)
+      if [ "$ARCH" = "amd64" ]; then NODE_ARCH="x64"
+      elif [ "$ARCH" = "arm64" ]; then NODE_ARCH="arm64"
+      else NODE_ARCH="$ARCH"; fi
+      curl -fsSL "https://nodejs.org/dist/v24.14.0/node-v24.14.0-linux-${NODE_ARCH}.tar.xz" \
+        | tar -xJ --strip-components=1 -C /usr
+      npm install --include=dev
+      npm install -g typescript
+    override-build: |
+      cd $CRAFT_PART_SRC
+      export PATH="$PWD/node_modules/.bin:$PATH"
+      npm run bundle:temporal
+      npm run bundle:marked
+      craftctl default

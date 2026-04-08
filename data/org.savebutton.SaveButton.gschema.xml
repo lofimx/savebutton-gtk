@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<schemalist gettext-domain="kaya">
+  <schema id="org.savebutton.SaveButton" path="/org/savebutton/SaveButton/">
+    <key name="sync-server-url" type="s">
+      <default>'https://savebutton.com'</default>
+      <summary>Kaya Server URL</summary>
+      <description>The URL of the Kaya Server to synchronize with. If set to the default (https://kaya.town), sync is disabled until a custom server is configured.</description>
+    </key>
+    <key name="sync-email" type="s">
+      <default>''</default>
+      <summary>Sync Account Email</summary>
+      <description>The email address for authenticating with the Kaya Server.</description>
+    </key>
+    <key name="sync-enabled" type="b">
+      <default>false</default>
+      <summary>Sync Enabled</summary>
+      <description>Whether synchronization with the Kaya Server is enabled.</description>
+    </key>
+    <key name="sync-in-progress" type="b">
+      <default>false</default>
+      <summary>Sync In Progress</summary>
+      <description>Whether a synchronization operation is currently in progress.</description>
+    </key>
+    <key name="sync-last-error" type="s">
+      <default>''</default>
+      <summary>Last Sync Error</summary>
+      <description>The last error that occurred during synchronization, if any.</description>
+    </key>
+    <key name="sync-last-success" type="s">
+      <default>''</default>
+      <summary>Last Successful Sync</summary>
+      <description>Timestamp of the last successful synchronization.</description>
+    </key>
+    <key name="native-host-port" type="i">
+      <default>21420</default>
+      <summary>Local Browser Sync Port</summary>
+      <description>The port number for the local HTTP server that accepts files from the browser extension.</description>
+    </key>
+  </schema>
+</schemalist>

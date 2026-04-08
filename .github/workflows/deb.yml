@@ -1,0 +1,92 @@
+name: DEB Build
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  deb-nightly:
+    name: DEB (Nightly)
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            meson ninja-build nodejs npm \
+            gjs libgjs-dev libgtk-4-dev libadwaita-1-dev \
+            libsecret-1-dev gettext desktop-file-utils \
+            appstream-util libglib2.0-dev
+
+      - name: Build
+        run: |
+          meson setup builddir --prefix=/usr
+          meson compile -C builddir
+
+      - name: Package
+        run: |
+          DESTDIR=$(pwd)/pkg meson install -C builddir
+          VERSION=$(meson introspect builddir --projectinfo | python3 -c "import sys,json; print(json.load(sys.stdin)['version'])")
+          mkdir -p pkg/DEBIAN
+          sed "s/VERSION_PLACEHOLDER/${VERSION}/" build-aux/deb/control > pkg/DEBIAN/control
+          cp build-aux/deb/postinst pkg/DEBIAN/postinst
+          cp build-aux/deb/postrm pkg/DEBIAN/postrm
+          dpkg-deb --build --root-owner-group pkg "savebutton_${VERSION}_amd64.deb"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: savebutton-deb-nightly
+          path: savebutton_*.deb
+
+  deb-release:
+    name: DEB (Release)
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            meson ninja-build nodejs npm \
+            gjs libgjs-dev libgtk-4-dev libadwaita-1-dev \
+            libsecret-1-dev gettext desktop-file-utils \
+            appstream-util libglib2.0-dev
+
+      - name: Build
+        run: |
+          meson setup builddir --prefix=/usr
+          meson compile -C builddir
+
+      - name: Package
+        run: |
+          DESTDIR=$(pwd)/pkg meson install -C builddir
+          VERSION=$(meson introspect builddir --projectinfo | python3 -c "import sys,json; print(json.load(sys.stdin)['version'])")
+          mkdir -p pkg/DEBIAN
+          sed "s/VERSION_PLACEHOLDER/${VERSION}/" build-aux/deb/control > pkg/DEBIAN/control
+          cp build-aux/deb/postinst pkg/DEBIAN/postinst
+          cp build-aux/deb/postrm pkg/DEBIAN/postrm
+          dpkg-deb --build --root-owner-group pkg "savebutton_${VERSION}_amd64.deb"
+
+      - name: Attach to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: savebutton_*.deb

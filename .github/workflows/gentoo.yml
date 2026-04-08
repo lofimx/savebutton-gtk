@@ -1,0 +1,235 @@
+name: Gentoo Build
+
+on:
+  push:
+    branches: [main]
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+concurrency:
+  group: gentoo-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  gentoo-nightly:
+    name: Gentoo (Nightly)
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    container:
+      image: gentoo/stage3:latest
+
+    steps:
+      - name: Install git and dependencies
+        run: |
+          # Configure binary packages for faster dependency installs
+          mkdir -p /etc/portage/binrepos.conf
+          cat > /etc/portage/binrepos.conf/gentoobinhost.conf <<'BINCONF'
+          [gentoobinhost]
+          priority = 1
+          sync-uri = https://distfiles.gentoo.org/releases/amd64/binpackages/23.0/x86-64
+          BINCONF
+          sed -i 's/^          //' /etc/portage/binrepos.conf/gentoobinhost.conf
+          getuto
+
+          emerge-webrsync
+          mkdir -p /etc/portage/package.use
+          echo "net-libs/nodejs npm" > /etc/portage/package.use/nodejs
+          emerge --getbinpkg --noreplace dev-vcs/git net-libs/nodejs
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Create deps tarball
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          VERSION=$(grep "version:" meson.build | head -1 | sed "s/.*'\(.*\)'.*/\1/")
+
+          # Install npm deps and bundle vendor files
+          npm install --include=dev
+          npm run bundle:temporal
+          npm run bundle:marked
+
+          # Create deps tarball containing node_modules and vendor bundles
+          tar cJf "/tmp/savebutton-${VERSION}-deps.tar.xz" \
+            -C "$GITHUB_WORKSPACE" \
+            --transform "s,^,kaya-gtk-${VERSION}/," \
+            node_modules src/vendor/temporal.js src/vendor/marked.js
+
+      - name: Set up overlay and ebuild
+        run: |
+          VERSION=$(grep "version:" meson.build | head -1 | sed "s/.*'\(.*\)'.*/\1/")
+          DISTDIR="/var/cache/distfiles"
+          mkdir -p "${DISTDIR}"
+
+          # Create local overlay
+          mkdir -p /var/db/repos/savebutton/{app-misc/savebutton,metadata,profiles}
+          echo "savebutton" > /var/db/repos/savebutton/profiles/repo_name
+          printf 'masters = gentoo\nauto-sync = false\n' \
+            > /var/db/repos/savebutton/metadata/layout.conf
+
+          # Register overlay with Portage
+          mkdir -p /etc/portage/repos.conf
+          printf '[savebutton]\nlocation = /var/db/repos/savebutton\n' \
+            > /etc/portage/repos.conf/savebutton.conf
+
+          sed "s/VERSION_PLACEHOLDER/${VERSION}/" \
+            build-aux/gentoo/savebutton-VERSION_PLACEHOLDER.ebuild \
+            > "/var/db/repos/savebutton/app-misc/savebutton/savebutton-${VERSION}.ebuild"
+          cp build-aux/gentoo/metadata.xml /var/db/repos/savebutton/app-misc/savebutton/
+
+          # Source tarball (without node_modules — those come from deps tarball)
+          tar czf "${DISTDIR}/savebutton-${VERSION}.tar.gz" \
+            -C "$GITHUB_WORKSPACE/.." \
+            --transform "s,^kaya-gtk,kaya-gtk-${VERSION}," \
+            --exclude=.git --exclude=node_modules \
+            kaya-gtk
+
+          # Deps tarball
+          cp "/tmp/savebutton-${VERSION}-deps.tar.xz" "${DISTDIR}/"
+
+          cd /var/db/repos/savebutton/app-misc/savebutton
+          ebuild "savebutton-${VERSION}.ebuild" manifest
+
+      - name: Build package
+        run: |
+          mkdir -p /etc/portage/package.accept_keywords /etc/portage/package.license /etc/portage/package.use
+          echo "app-misc/savebutton ~amd64" > /etc/portage/package.accept_keywords/savebutton
+          echo "app-misc/savebutton AGPL-3 MIT" > /etc/portage/package.license/savebutton
+
+          # USE flags required by transitive dependencies
+          cat > /etc/portage/package.use/savebutton-deps <<'EOF'
+          media-libs/freetype harfbuzz
+          x11-libs/cairo X
+          media-libs/libglvnd X
+          app-crypt/gcr:0 gtk
+          EOF
+          sed -i 's/^          //' /etc/portage/package.use/savebutton-deps
+
+          # Use binary packages for dependencies, build savebutton from source
+          emerge --getbinpkg --verbose app-misc/savebutton
+
+      - name: Verify installation
+        run: |
+          test -x /usr/bin/org.savebutton.SaveButton
+          echo "Binary installed successfully"
+
+  gentoo-release:
+    name: Gentoo (Release)
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    container:
+      image: gentoo/stage3:latest
+
+    steps:
+      - name: Install git and dependencies
+        run: |
+          # Configure binary packages for faster dependency installs
+          mkdir -p /etc/portage/binrepos.conf
+          cat > /etc/portage/binrepos.conf/gentoobinhost.conf <<'BINCONF'
+          [gentoobinhost]
+          priority = 1
+          sync-uri = https://distfiles.gentoo.org/releases/amd64/binpackages/23.0/x86-64
+          BINCONF
+          sed -i 's/^          //' /etc/portage/binrepos.conf/gentoobinhost.conf
+          getuto
+
+          emerge-webrsync
+          mkdir -p /etc/portage/package.use
+          echo "net-libs/nodejs npm" > /etc/portage/package.use/nodejs
+          emerge --getbinpkg --noreplace dev-vcs/git net-libs/nodejs
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Create deps tarball
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          VERSION="${GITHUB_REF_NAME#v}"
+
+          npm install --include=dev
+          npm run bundle:temporal
+          npm run bundle:marked
+
+          tar cJf "/tmp/savebutton-${VERSION}-deps.tar.xz" \
+            -C "$GITHUB_WORKSPACE" \
+            --transform "s,^,kaya-gtk-${VERSION}/," \
+            node_modules src/vendor/temporal.js src/vendor/marked.js
+
+      - name: Set up overlay and ebuild
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          DISTDIR="/var/cache/distfiles"
+          mkdir -p "${DISTDIR}"
+
+          mkdir -p /var/db/repos/savebutton/{app-misc/savebutton,metadata,profiles}
+          echo "savebutton" > /var/db/repos/savebutton/profiles/repo_name
+          printf 'masters = gentoo\nauto-sync = false\n' \
+            > /var/db/repos/savebutton/metadata/layout.conf
+
+          mkdir -p /etc/portage/repos.conf
+          printf '[savebutton]\nlocation = /var/db/repos/savebutton\n' \
+            > /etc/portage/repos.conf/savebutton.conf
+
+          sed "s/VERSION_PLACEHOLDER/${VERSION}/" \
+            build-aux/gentoo/savebutton-VERSION_PLACEHOLDER.ebuild \
+            > "/var/db/repos/savebutton/app-misc/savebutton/savebutton-${VERSION}.ebuild"
+          cp build-aux/gentoo/metadata.xml /var/db/repos/savebutton/app-misc/savebutton/
+
+          tar czf "${DISTDIR}/savebutton-${VERSION}.tar.gz" \
+            -C "$GITHUB_WORKSPACE/.." \
+            --transform "s,^kaya-gtk,kaya-gtk-${VERSION}," \
+            --exclude=.git --exclude=node_modules \
+            kaya-gtk
+
+          cp "/tmp/savebutton-${VERSION}-deps.tar.xz" "${DISTDIR}/"
+
+          cd /var/db/repos/savebutton/app-misc/savebutton
+          ebuild "savebutton-${VERSION}.ebuild" manifest
+
+      - name: Build package
+        run: |
+          mkdir -p /etc/portage/package.accept_keywords /etc/portage/package.license /etc/portage/package.use
+          echo "app-misc/savebutton ~amd64" > /etc/portage/package.accept_keywords/savebutton
+          echo "app-misc/savebutton AGPL-3 MIT" > /etc/portage/package.license/savebutton
+
+          cat > /etc/portage/package.use/savebutton-deps <<'EOF'
+          media-libs/freetype harfbuzz
+          x11-libs/cairo X
+          media-libs/libglvnd X
+          app-crypt/gcr:0 gtk
+          EOF
+          sed -i 's/^          //' /etc/portage/package.use/savebutton-deps
+
+          emerge --getbinpkg --verbose app-misc/savebutton
+
+      - name: Verify installation
+        run: |
+          test -x /usr/bin/org.savebutton.SaveButton
+          echo "Binary installed successfully"
+
+      - name: Collect release assets
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          cp "/tmp/savebutton-${VERSION}-deps.tar.xz" .
+          cp "/var/db/repos/savebutton/app-misc/savebutton/savebutton-${VERSION}.ebuild" .
+
+      - name: Upload release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            savebutton-*-deps.tar.xz
+            savebutton-*.ebuild
+
+      - name: Run pkgcheck scan
+        run: |
+          emerge --getbinpkg --noreplace dev-util/pkgcheck
+          cd /var/db/repos/savebutton
+          pkgcheck scan app-misc/savebutton || true

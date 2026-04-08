@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE pkgmetadata SYSTEM "https://www.gentoo.org/dtd/metadata.dtd">
+<pkgmetadata>
+	<maintainer type="person">
+		<email>sdeobald@gnome.org</email>
+		<name>Steven Deobald</name>
+	</maintainer>
+	<upstream>
+		<remote-id type="github">lofimx/kaya-gtk</remote-id>
+		<bugs-to>https://github.com/lofimx/kaya-gtk/issues</bugs-to>
+	</upstream>
+	<longdescription lang="en">
+		Save Button is a simple, immutable, local-first note-taking
+		and bookmarking application for Linux.
+		Store, search, and sync your notes and bookmarks.
+	</longdescription>
+</pkgmetadata>

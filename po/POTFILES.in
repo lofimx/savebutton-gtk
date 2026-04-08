@@ -1,0 +1,8 @@
+data/org.savebutton.SaveButton.desktop.in
+data/org.savebutton.SaveButton.metainfo.xml.in
+data/org.savebutton.SaveButton.gschema.xml
+data/everything_window.ui
+data/new_save_window.ui
+src/main.ts
+src/views/everything_window.ts
+src/views/new_save_window.ts

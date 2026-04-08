@@ -1,0 +1,199 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Created with Cambalache 0.96.3 -->
+<interface>
+  <!-- interface-name window.ui -->
+  <requires lib="gio" version="2.0"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
+  <template class="Gjs_Window" parent="AdwApplicationWindow">
+    <property name="content">
+      <object class="AdwToastOverlay" id="toastOverlay">
+        <property name="child">
+          <object class="AdwToolbarView">
+            <child type="top">
+              <object class="AdwHeaderBar">
+                <property name="title-widget">
+                  <object class="GtkSearchEntry" id="searchEntry">
+                    <property name="placeholder-text" translatable="yes">Search...</property>
+                    <property name="hexpand">true</property>
+                  </object>
+                </property>
+                <child type="end">
+                  <object class="GtkMenuButton">
+                    <property name="icon-name">open-menu-symbolic</property>
+                    <property name="menu-model">primary_menu</property>
+                    <property name="tooltip-text" translatable="yes">Main Menu</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">0</property>
+                <!-- Input area -->
+                <child>
+                  <object class="AdwClamp">
+                    <property name="maximum-size">500</property>
+                    <property name="tightening-threshold">400</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">12</property>
+                        <property name="margin-top">24</property>
+                        <property name="margin-bottom">12</property>
+                        <property name="margin-start">12</property>
+                        <property name="margin-end">12</property>
+                        <child>
+                          <object class="GtkEntry" id="angaText">
+                            <property name="placeholder-text" translatable="yes">Enter bookmark text...</property>
+                            <property name="enable-emoji-completion">True</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkToggleButton" id="noteToggle">
+                            <property name="label" translatable="yes">Add a note</property>
+                            <property name="icon-name">go-down-symbolic</property>
+                            <style>
+                              <class name="flat"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkRevealer" id="noteRevealer">
+                            <property name="reveal-child">false</property>
+                            <property name="transition-type">slide-down</property>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkTextView" id="noteText">
+                                    <property name="wrap-mode">word-char</property>
+                                    <property name="accepts-tab">False</property>
+                                    <property name="top-margin">8</property>
+                                    <property name="bottom-margin">8</property>
+                                    <property name="left-margin">8</property>
+                                    <property name="right-margin">8</property>
+                                    <property name="height-request">80</property>
+                                    <style>
+                                      <class name="card"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="label" translatable="yes">Add a note (optional)</property>
+                                    <property name="xalign">0</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                      <class name="caption"/>
+                                    </style>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="saveButton">
+                            <property name="label" translatable="yes">Save</property>
+                            <signal name="clicked" handler="onSave"/>
+                            <style>
+                              <class name="pill"/>
+                              <class name="suggested-action"/>
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <!-- Separator -->
+                <child>
+                  <object class="GtkSeparator">
+                    <property name="margin-top">12</property>
+                  </object>
+                </child>
+                <!-- Search results area -->
+                <child>
+                  <object class="GtkStack" id="resultsStack">
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">empty</property>
+                        <property name="child">
+                          <object class="AdwStatusPage">
+                            <property name="icon-name">folder-documents-symbolic</property>
+                            <property name="title" translatable="yes">No items yet</property>
+                            <property name="description" translatable="yes">Save a bookmark or note to get started</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">no-results</property>
+                        <property name="child">
+                          <object class="AdwStatusPage">
+                            <property name="icon-name">system-search-symbolic</property>
+                            <property name="title" translatable="yes">No results</property>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkStackPage">
+                        <property name="name">results</property>
+                        <property name="child">
+                          <object class="GtkScrolledWindow">
+                            <property name="vexpand">true</property>
+                            <property name="hscrollbar-policy">never</property>
+                            <child>
+                              <object class="GtkFlowBox" id="searchResultsFlowBox">
+                                <property name="homogeneous">true</property>
+                                <property name="min-children-per-line">2</property>
+                                <property name="max-children-per-line">4</property>
+                                <property name="selection-mode">none</property>
+                                <property name="margin-start">12</property>
+                                <property name="margin-end">12</property>
+                                <property name="margin-top">12</property>
+                                <property name="margin-bottom">12</property>
+                                <property name="row-spacing">12</property>
+                                <property name="column-spacing">12</property>
+                              </object>
+                            </child>
+                          </object>
+                        </property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </property>
+      </object>
+    </property>
+    <property name="default-height">700</property>
+    <property name="default-width">600</property>
+    <property name="width-request">360</property>
+    <property name="height-request">450</property>
+  </template>
+  <menu id="primary_menu">
+    <section>
+      <item>
+        <attribute name="action">app.preferences</attribute>
+        <attribute name="label" translatable="yes">_Preferences</attribute>
+      </item>
+      <item>
+        <attribute name="action">win.show-help-overlay</attribute>
+        <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
+      </item>
+      <item>
+        <attribute name="action">app.about</attribute>
+        <attribute name="label" translatable="yes">_About Save Button</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>

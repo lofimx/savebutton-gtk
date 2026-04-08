@@ -1,0 +1,309 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<interface>
+  <requires lib="gio" version="2.0"/>
+  <requires lib="gtk" version="4.14"/>
+  <requires lib="libadwaita" version="1.5"/>
+  <template class="Gjs_PreviewWindow" parent="AdwWindow">
+    <property name="content">
+      <object class="AdwToastOverlay" id="toastOverlay">
+        <property name="child">
+          <object class="AdwToolbarView">
+            <child type="top">
+              <object class="AdwHeaderBar">
+                <child type="start">
+                  <object class="GtkButton" id="cancelButton">
+                    <property name="label" translatable="yes">Cancel</property>
+                  </object>
+                </child>
+                <property name="title-widget">
+                  <object class="AdwWindowTitle" id="windowTitle">
+                    <property name="title" translatable="yes">Preview</property>
+                  </object>
+                </property>
+                <child type="end">
+                  <object class="GtkButton" id="saveButton">
+                    <property name="label" translatable="yes">Save</property>
+                    <style>
+                      <class name="suggested-action"/>
+                    </style>
+                  </object>
+                </child>
+                <child type="end">
+                  <object class="GtkToggleButton" id="sidebarToggle">
+                    <property name="icon-name">sidebar-show-right-symbolic</property>
+                    <property name="tooltip-text" translatable="yes">Toggle Sidebar</property>
+                    <property name="active">true</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+            <child>
+              <object class="AdwOverlaySplitView" id="splitView">
+                <property name="sidebar-position">end</property>
+                <property name="show-sidebar">true</property>
+                <property name="max-sidebar-width">344</property>
+                <property name="min-sidebar-width">260</property>
+                <!-- Content area -->
+                <property name="content">
+                  <object class="GtkScrolledWindow">
+                    <property name="hexpand">true</property>
+                    <property name="vexpand">true</property>
+                    <property name="hscrollbar-policy">never</property>
+                    <child>
+                      <object class="GtkStack" id="contentStack">
+                        <property name="vexpand">true</property>
+                        <property name="hexpand">true</property>
+                        <!-- Bookmark page -->
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">bookmark</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <property name="margin-top">24</property>
+                                <property name="margin-bottom">24</property>
+                                <property name="margin-start">24</property>
+                                <property name="margin-end">24</property>
+                                <child>
+                                  <object class="GtkButton" id="bookmarkButton">
+                                    <property name="halign">center</property>
+                                    <property name="cursor">
+                                      <object class="GdkCursor">
+                                        <property name="name">pointer</property>
+                                      </object>
+                                    </property>
+                                    <style>
+                                      <class name="flat"/>
+                                    </style>
+                                    <child>
+                                      <object class="GtkBox">
+                                        <property name="orientation">vertical</property>
+                                        <property name="spacing">12</property>
+                                        <property name="halign">center</property>
+                                        <child>
+                                          <object class="GtkImage" id="faviconImage">
+                                            <property name="icon-name">bookmark-filled-symbolic</property>
+                                            <property name="pixel-size">48</property>
+                                            <style>
+                                              <class name="dim-label"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                        <child>
+                                          <object class="GtkLabel" id="bookmarkUrl">
+                                            <property name="wrap">true</property>
+                                            <property name="xalign">0.5</property>
+                                            <style>
+                                              <class name="caption"/>
+                                              <class name="dim-label"/>
+                                            </style>
+                                          </object>
+                                        </child>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <!-- Note page -->
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">note</property>
+                            <property name="child">
+                              <object class="GtkScrolledWindow">
+                                <property name="hscrollbar-policy">never</property>
+                                <property name="vexpand">true</property>
+                                <child>
+                                  <object class="AdwClamp">
+                                    <property name="maximum-size">600</property>
+                                    <child>
+                                      <object class="GtkLabel" id="noteLabel">
+                                        <property name="wrap">true</property>
+                                        <property name="xalign">0</property>
+                                        <property name="yalign">0</property>
+                                        <property name="selectable">true</property>
+                                        <property name="use-markup">true</property>
+                                        <property name="margin-top">24</property>
+                                        <property name="margin-bottom">24</property>
+                                        <property name="margin-start">24</property>
+                                        <property name="margin-end">24</property>
+                                      </object>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <!-- Image page -->
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">image</property>
+                            <property name="child">
+                              <object class="GtkScrolledWindow">
+                                <property name="vexpand">true</property>
+                                <child>
+                                  <object class="GtkPicture" id="imagePicture">
+                                    <property name="can-shrink">true</property>
+                                    <property name="content-fit">contain</property>
+                                    <property name="margin-top">12</property>
+                                    <property name="margin-bottom">12</property>
+                                    <property name="margin-start">12</property>
+                                    <property name="margin-end">12</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                        <!-- Generic file page -->
+                        <child>
+                          <object class="GtkStackPage">
+                            <property name="name">file</property>
+                            <property name="child">
+                              <object class="GtkBox">
+                                <property name="orientation">vertical</property>
+                                <property name="spacing">12</property>
+                                <property name="halign">center</property>
+                                <property name="valign">center</property>
+                                <child>
+                                  <object class="GtkImage" id="fileTypeIcon">
+                                    <property name="pixel-size">64</property>
+                                    <style>
+                                      <class name="dim-label"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkLabel" id="fileTypeLabel">
+                                    <property name="wrap">true</property>
+                                    <property name="ellipsize">end</property>
+                                    <style>
+                                      <class name="title-3"/>
+                                    </style>
+                                  </object>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="openExternallyButton">
+                                    <property name="label" translatable="yes">Open Externally</property>
+                                    <property name="halign">center</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+                <!-- Sidebar -->
+                <property name="sidebar">
+                  <object class="GtkScrolledWindow">
+                    <property name="hscrollbar-policy">never</property>
+                    <property name="vexpand">true</property>
+                    <child>
+                      <object class="GtkBox" id="sidebarBox">
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">8</property>
+                        <property name="margin-top">16</property>
+                        <property name="margin-bottom">16</property>
+                        <property name="margin-start">16</property>
+                        <property name="margin-end">16</property>
+                        <!-- Tags section -->
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Tags</property>
+                            <property name="xalign">0</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="tagsContainer">
+                            <property name="orientation">horizontal</property>
+                            <property name="spacing">4</property>
+                            <property name="hexpand">true</property>
+                            <style>
+                              <class name="tags-container"/>
+                            </style>
+                            <child>
+                              <object class="GtkEntry" id="tagsInput">
+                                <property name="placeholder-text" translatable="yes">Tags (comma separated)...</property>
+                                <property name="hexpand">true</property>
+                                <style>
+                                  <class name="flat"/>
+                                  <class name="tags-entry"/>
+                                </style>
+                              </object>
+                            </child>
+                          </object>
+                        </child>
+                        <!-- Note section -->
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="label" translatable="yes">Note</property>
+                            <property name="xalign">0</property>
+                            <property name="margin-top">8</property>
+                            <style>
+                              <class name="heading"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkTextView" id="sidebarNoteText">
+                            <property name="focusable">true</property>
+                            <property name="vexpand">true</property>
+                            <property name="wrap-mode">word-char</property>
+                            <property name="accepts-tab">False</property>
+                            <property name="top-margin">8</property>
+                            <property name="bottom-margin">8</property>
+                            <property name="left-margin">8</property>
+                            <property name="right-margin">8</property>
+                            <property name="height-request">100</property>
+                            <style>
+                              <class name="card"/>
+                            </style>
+                          </object>
+                        </child>
+                        <!-- Share section -->
+                        <child>
+                          <object class="GtkLabel" id="shareSectionLabel">
+                            <property name="label" translatable="yes">Share</property>
+                            <property name="xalign">0</property>
+                            <property name="margin-top">8</property>
+                            <style>
+                              <class name="heading"/>
+                              <class name="dim-label"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkButton" id="shareButton">
+                            <property name="label" translatable="yes">Share</property>
+                            <property name="sensitive">false</property>
+                            <property name="halign">start</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </property>
+              </object>
+            </child>
+          </object>
+        </property>
+      </object>
+    </property>
+    <property name="default-height">600</property>
+    <property name="default-width">900</property>
+    <property name="width-request">500</property>
+    <property name="height-request">400</property>
+  </template>
+</interface>

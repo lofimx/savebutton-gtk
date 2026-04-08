@@ -1,0 +1,52 @@
+{
+  "id": "org.savebutton.SaveButton",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "49",
+  "sdk": "org.gnome.Sdk",
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.node24",
+    "org.freedesktop.Sdk.Extension.typescript"
+  ],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/node24/bin:/usr/lib/sdk/typescript/bin"
+  },
+  "command": "org.savebutton.SaveButton",
+  "finish-args": [
+    "--share=network",
+    "--device=dri",
+    "--socket=wayland",
+    "--filesystem=~/.kaya:create"
+  ],
+  "cleanup": [
+    "/include",
+    "/lib/pkgconfig",
+    "/man",
+    "/share/doc",
+    "/share/gtk-doc",
+    "/share/man",
+    "/share/pkgconfig",
+    "*.la",
+    "*.a"
+  ],
+  "modules": [
+    {
+      "name": "kaya",
+      "buildsystem": "meson",
+      "build-options": {
+        "env": {
+          "npm_config_offline": "true",
+          "npm_config_cache": "/run/build/kaya/flatpak-node/npm-cache"
+        }
+      },
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/lofimx/kaya-gtk.git",
+          "tag": "v0.2.15",
+          "commit": "c1cb8ad42b73e8feed795492604f0bb4dbe8ba6a"
+        },
+        "generated-sources.json"
+      ]
+    }
+  ]
+}
