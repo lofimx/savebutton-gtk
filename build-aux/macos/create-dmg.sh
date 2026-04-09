@@ -39,35 +39,55 @@ if [ -n "${MACOS_SIGNING_IDENTITY:-}" ]; then
         ENTITLEMENTS="$APP_PATH/Contents/entitlements.plist"
     fi
 
+    # Retry wrapper for codesign — Apple's timestamp server can be slow in CI
+    sign() {
+        local max_attempts=3
+        local attempt=1
+        while [ $attempt -le $max_attempts ]; do
+            if codesign --force --sign "$MACOS_SIGNING_IDENTITY" \
+                --options runtime \
+                --timestamp \
+                --entitlements "$ENTITLEMENTS" \
+                "$@" 2>&1; then
+                return 0
+            fi
+            echo "  codesign attempt $attempt failed, retrying in 5s..."
+            sleep 5
+            attempt=$((attempt + 1))
+        done
+        echo "ERROR: codesign failed after $max_attempts attempts: $*"
+        return 1
+    }
+
     # Sign all dylibs first (innermost binaries must be signed before the bundle)
     find "$APP_PATH" -name "*.dylib" -o -name "*.so" | while read -r lib; do
-        codesign --force --sign "$MACOS_SIGNING_IDENTITY" \
-            --options runtime \
-            --entitlements "$ENTITLEMENTS" \
-            "$lib"
+        sign "$lib"
     done
 
     # Sign pixbuf loaders
     find "$APP_PATH/Contents/Resources/lib/gdk-pixbuf-2.0" -type f 2>/dev/null | while read -r loader; do
         if file "$loader" | grep -q "Mach-O"; then
-            codesign --force --sign "$MACOS_SIGNING_IDENTITY" \
-                --options runtime \
-                --entitlements "$ENTITLEMENTS" \
-                "$loader"
+            sign "$loader"
         fi
     done
 
     # Sign the GJS binary
-    codesign --force --sign "$MACOS_SIGNING_IDENTITY" \
-        --options runtime \
-        --entitlements "$ENTITLEMENTS" \
-        "$APP_PATH/Contents/Resources/bin/gjs"
+    sign "$APP_PATH/Contents/Resources/bin/gjs"
 
     # Sign the app bundle itself
     codesign --force --deep --sign "$MACOS_SIGNING_IDENTITY" \
         --options runtime \
+        --timestamp \
         --entitlements "$ENTITLEMENTS" \
-        "$APP_PATH"
+        "$APP_PATH" || {
+        echo "  Retrying app bundle signing in 5s..."
+        sleep 5
+        codesign --force --deep --sign "$MACOS_SIGNING_IDENTITY" \
+            --options runtime \
+            --timestamp \
+            --entitlements "$ENTITLEMENTS" \
+            "$APP_PATH"
+    }
 
     echo "Code signing complete."
 else
