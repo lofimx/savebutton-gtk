@@ -42,7 +42,7 @@ export class Application extends Adw.Application {
         application_name: _("Save Button"),
         application_icon: "org.savebutton.SaveButton",
         developer_name: "Steven Deobald",
-        version: "0.2.21",
+        version: "0.2.22",
         developers: ["Steven Deobald <sdeobald@gnome.org>"],
         copyright: "© 2026 Steven Deobald",
       });
