@@ -1,6 +1,6 @@
 {
   "name": "savebutton",
-  "version": "0.2.22",
+  "version": "0.2.23",
   "description": "Simple bookmark and notes manager",
   "main": "src/main.ts",
   "repository": "https://github.com/lofimx/savebutton-gtk",
