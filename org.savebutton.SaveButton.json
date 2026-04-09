@@ -42,7 +42,8 @@
         {
           "type": "git",
           "url": "https://github.com/lofimx/savebutton-gtk.git",
-          "tag": "v0.2.23"
+          "tag": "v0.2.23",
+          "commit": "593d418aabb2259a202f8b90d5c3449a2148d29a"
         },
         "generated-sources.json"
       ]
