@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<schemalist gettext-domain="kaya">
+<schemalist gettext-domain="savebutton">
   <schema id="org.savebutton.SaveButton" path="/org/savebutton/SaveButton/">
     <key name="sync-server-url" type="s">
       <default>'https://savebutton.com'</default>
-      <summary>Kaya Server URL</summary>
-      <description>The URL of the Kaya Server to synchronize with. If set to the default (https://kaya.town), sync is disabled until a custom server is configured.</description>
+      <summary>Save Button Server URL</summary>
+      <description>The URL of the Save Button server to synchronize with.</description>
     </key>
     <key name="sync-email" type="s">
       <default>''</default>
       <summary>Sync Account Email</summary>
-      <description>The email address for authenticating with the Kaya Server.</description>
+      <description>The email address for authenticating with the Save Button Server.</description>
     </key>
     <key name="sync-enabled" type="b">
       <default>false</default>
       <summary>Sync Enabled</summary>
-      <description>Whether synchronization with the Kaya Server is enabled.</description>
+      <description>Whether synchronization with the Save Button Server is enabled.</description>
     </key>
     <key name="sync-in-progress" type="b">
       <default>false</default>

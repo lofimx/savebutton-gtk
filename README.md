@@ -1,8 +1,8 @@
-# Kaya
+# Save Button
 
-Kaya is a local-first bookmarking system. Sort of. It might be described as the most insanely oversimplified bookmarking system in existence.
+Save Button is a local-first bookmarking system. Sort of. It might be described as the most insanely oversimplified bookmarking system in existence.
 
-![The main Kaya window.](./data/screenshots/screenshot-1.png)
+![The main Save Button window.](./data/screenshots/screenshot-1.png)
 
 ## TODO
 
@@ -17,15 +17,15 @@ Kaya is a local-first bookmarking system. Sort of. It might be described as the 
 
 ## Architecture
 
-The Kaya architecture is defined in Architectural Decision Records, or ADRs. You can find a chronological list of ADRs in [doc/arch](doc/arch).
+The Save Button architecture is defined in Architectural Decision Records, or ADRs. You can find a chronological list of ADRs in [doc/arch](doc/arch).
 
 ### Data Model
 
-The local disk is the only source of truth. Kaya's records ("anga") are stored in the following layout:
+The local disk is the only source of truth. Save Button's records ("anga") are stored in the following layout:
 
 * `~/.kaya/anga` = bookmarks, notes, PDFs, images, and other files (manual data)
 * `~/.kaya/meta` = tags and metadata for anga records (manual data)
-* `~/.kaya/words` = words extracted by Kaya Server for full-text search (generated data)
+* `~/.kaya/words` = words extracted by Save Button server for full-text search (generated data)
 
 ## Setting Up Your Development Environment
 

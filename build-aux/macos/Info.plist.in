@@ -7,7 +7,7 @@
     <key>CFBundleDisplayName</key>
     <string>Save Button</string>
     <key>CFBundleExecutable</key>
-    <string>kaya</string>
+    <string>savebutton</string>
     <key>CFBundleIconFile</key>
     <string>savebutton.icns</string>
     <key>CFBundleIdentifier</key>

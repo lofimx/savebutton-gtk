@@ -66,7 +66,7 @@ mkdir -p "$MACOS_DIR"
 mkdir -p "$RESOURCES/bin"
 mkdir -p "$RESOURCES/lib/girepository-1.0"
 mkdir -p "$RESOURCES/lib/gdk-pixbuf-2.0/2.10.0/loaders"
-mkdir -p "$RESOURCES/share/kaya"
+mkdir -p "$RESOURCES/share/savebutton"
 mkdir -p "$RESOURCES/share/glib-2.0/schemas"
 mkdir -p "$RESOURCES/share/icons/hicolor"
 
@@ -105,8 +105,8 @@ rm -rf "$ICONSET_DIR"
 # ---- Step 5: Copy GResource bundles ----
 echo "--- Step 5: Copying GResource bundles ---"
 
-cp "$BUILDDIR/src/$APP_ID.src.gresource" "$RESOURCES/share/kaya/"
-cp "$BUILDDIR/data/$APP_ID.data.gresource" "$RESOURCES/share/kaya/"
+cp "$BUILDDIR/src/$APP_ID.src.gresource" "$RESOURCES/share/savebutton/"
+cp "$BUILDDIR/data/$APP_ID.data.gresource" "$RESOURCES/share/savebutton/"
 
 # ---- Step 6: GSettings schemas ----
 echo "--- Step 6: Compiling GSettings schemas ---"
@@ -249,9 +249,9 @@ fi
 # ---- Step 12: Install macOS launcher scripts ----
 echo "--- Step 12: Installing launcher scripts ---"
 
-cp "$SCRIPT_DIR/kaya-launcher.js" "$RESOURCES/share/kaya/"
-cp "$SCRIPT_DIR/kaya-shell-launcher.sh" "$MACOS_DIR/kaya"
-chmod +x "$MACOS_DIR/kaya"
+cp "$SCRIPT_DIR/kaya-launcher.js" "$RESOURCES/share/savebutton/"
+cp "$SCRIPT_DIR/kaya-shell-launcher.sh" "$MACOS_DIR/savebutton"
+chmod +x "$MACOS_DIR/savebutton"
 
 # ---- Step 13: Copy entitlements (used during code signing) ----
 cp "$SCRIPT_DIR/entitlements.plist" "$CONTENTS/"
@@ -276,7 +276,7 @@ echo ""
 echo "Bundle contents:"
 echo "  Dylibs: $(find "$RESOURCES/lib" -name '*.dylib' | wc -l | tr -d ' ')"
 echo "  Typelibs: $(find "$DEST_TYPELIB" -name '*.typelib' | wc -l | tr -d ' ')"
-echo "  GResources: $(find "$RESOURCES/share/kaya" -name '*.gresource' | wc -l | tr -d ' ')"
+echo "  GResources: $(find "$RESOURCES/share/savebutton" -name '*.gresource' | wc -l | tr -d ' ')"
 
 echo ""
 echo "=== Bundle complete: $APPDIR ==="

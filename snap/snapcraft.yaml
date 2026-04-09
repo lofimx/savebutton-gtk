@@ -1,5 +1,5 @@
 name: savebutton
-adopt-info: kaya
+adopt-info: savebutton
 summary: Simple bookmark and notes manager
 description: |
   Save Button is a simple, immutable, local-first note-taking
@@ -27,7 +27,7 @@ apps:
       - password-manager-service
 
 parts:
-  kaya:
+  savebutton:
     plugin: meson
     source: .
     meson-parameters:

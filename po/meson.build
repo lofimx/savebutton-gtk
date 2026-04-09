@@ -1,1 +1,1 @@
-i18n.gettext('kaya', preset: 'glib')
+i18n.gettext('savebutton', preset: 'glib')

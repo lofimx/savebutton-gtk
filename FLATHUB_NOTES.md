@@ -28,7 +28,7 @@ make test
 The production manifest includes:
 - GNOME 48 runtime (stable, includes GTK 4.18)
 - Offline npm dependency bundling via generated-sources.json (888 packages)
-- npm configured for offline mode with cache at /run/build/kaya/flatpak-node/npm-cache
+- npm configured for offline mode with cache at /run/build/savebutton/flatpak-node/npm-cache
 - File system permission for ~/.kaya directory
 - All icons (scalable SVG, symbolic, PNGs in 6 sizes)
 - AppStream metadata with screenshots

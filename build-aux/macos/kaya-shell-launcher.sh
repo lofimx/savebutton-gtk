@@ -2,7 +2,7 @@
 
 # Kaya macOS launcher
 #
-# This script is installed as Contents/MacOS/kaya and is the actual
+# This script is installed as Contents/MacOS/savebutton and is the actual
 # executable macOS runs when you double-click the app. It sets up
 # the environment for the bundled GJS runtime and launches the application.
 
@@ -37,4 +37,4 @@ export GTK_DATA_PREFIX="$RESOURCES"
 export GTK_IM_MODULE=quartz
 
 # Launch GJS with the macOS entry point
-exec "$RESOURCES/bin/gjs" -m "$RESOURCES/share/kaya/kaya-launcher.js"
+exec "$RESOURCES/bin/gjs" -m "$RESOURCES/share/savebutton/kaya-launcher.js"

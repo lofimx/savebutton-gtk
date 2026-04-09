@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Kaya Sync Script
-# Synchronizes local ~/.kaya/ directory with the Kaya server API
+# Save Button Sync Script
+# Synchronizes local ~/.kaya/ directory with the Save Button server API
 #
 # Directory structure:
 #   ~/.kaya/anga/  - bookmarks, notes, PDFs, images, and other files
@@ -57,7 +57,7 @@ class KayaSync
 
   def prompt_credentials
     unless @base_url
-      print "Kaya Server URL [#{DEFAULT_URL}]: "
+      print "Save Button Server URL [#{DEFAULT_URL}]: "
       url_input = $stdin.gets.chomp
       @base_url = url_input.empty? ? DEFAULT_URL : url_input.chomp("/")
     end
@@ -75,7 +75,7 @@ class KayaSync
       confirm = $stdin.gets.chomp.downcase
       if confirm == "n"
         puts ""
-        print "Kaya Server URL [#{@base_url}]: "
+        print "Save Button Server URL [#{@base_url}]: "
         url_input = $stdin.gets.chomp
         @base_url = url_input.empty? ? @base_url : url_input.chomp("/")
         print "Email: "
@@ -532,15 +532,15 @@ options = {}
 OptionParser.new do |opts|
   opts.banner = "Usage: #{$0} [options]"
 
-  opts.on("-e", "--email EMAIL", "Your Kaya account email") do |email|
+  opts.on("-e", "--email EMAIL", "Your Save Button account email") do |email|
     options[:email] = email
   end
 
-  opts.on("-p", "--password PASSWORD", "Your Kaya account password") do |password|
+  opts.on("-p", "--password PASSWORD", "Your Save Button account password") do |password|
     options[:password] = password
   end
 
-  opts.on("-u", "--url URL", "Kaya server URL (default: #{KayaSync::DEFAULT_URL})") do |url|
+  opts.on("-u", "--url URL", "Save Button server URL (default: #{KayaSync::DEFAULT_URL})") do |url|
     options[:url] = url.chomp("/")
   end
 

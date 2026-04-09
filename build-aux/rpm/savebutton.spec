@@ -58,7 +58,7 @@ update-desktop-database &>/dev/null || :
 %files
 %license LICENSE
 %{_bindir}/org.savebutton.SaveButton
-%{_datadir}/kaya/
+%{_datadir}/savebutton/
 %{_datadir}/applications/org.savebutton.SaveButton.desktop
 %{_datadir}/metainfo/org.savebutton.SaveButton.metainfo.xml
 %{_datadir}/glib-2.0/schemas/org.savebutton.SaveButton.gschema.xml

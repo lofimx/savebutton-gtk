@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-# Kaya Release Script
+# Save Button Release Script
 # Automates the release process:
 #   Step 1: Determine and confirm new version
 #   Step 2: Update version in all source files (including release manifest)

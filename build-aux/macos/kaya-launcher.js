@@ -23,13 +23,13 @@ if (!resourcesDir) {
 const srcGresourcePath = GLib.build_filenamev([
   resourcesDir,
   "share",
-  "kaya",
+  "savebutton",
   "org.savebutton.SaveButton.src.gresource",
 ]);
 const dataGresourcePath = GLib.build_filenamev([
   resourcesDir,
   "share",
-  "kaya",
+  "savebutton",
   "org.savebutton.SaveButton.data.gresource",
 ]);
 

@@ -5,14 +5,42 @@
    viewBox="0 0 512 512"
    version="1.1"
    id="svg10"
-   sodipodi:docname="yellow-floppy3.svg"
+   sodipodi:docname="yellow-floppy4.svg"
    inkscape:version="1.4.3 (0d15f75042, 2025-12-25)"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
    xmlns:svg="http://www.w3.org/2000/svg">
   <defs
-     id="defs10" />
+     id="defs10">
+    <mask
+       id="hole-mask">
+      <rect
+         x="0"
+         y="0"
+         width="512"
+         height="512"
+         fill="white"
+         id="rect1" />
+      <circle
+         cx="106"
+         cy="96"
+         r="22"
+         fill="black"
+         id="circle1" />
+      <circle
+         cx="406"
+         cy="96"
+         r="22"
+         fill="black"
+         id="circle2" />
+    </mask>
+    <!-- Vertical gradient: lit from above, subtle darkening toward bottom -->
+    <linearGradient id="yellow-gradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffc830"/>
+      <stop offset="100%" stop-color="#e89f00"/>
+    </linearGradient>
+  </defs>
   <sodipodi:namedview
      id="namedview10"
      pagecolor="#505050"
@@ -23,69 +51,73 @@
      inkscape:pagecheckerboard="0"
      inkscape:deskcolor="#505050"
      inkscape:zoom="1.4804688"
-     inkscape:cx="255.66226"
+     inkscape:cx="255.99999"
      inkscape:cy="256.67545"
-     inkscape:window-width="1920"
-     inkscape:window-height="1011"
+     inkscape:window-width="1503"
+     inkscape:window-height="933"
      inkscape:window-x="0"
      inkscape:window-y="0"
      inkscape:window-maximized="1"
      inkscape:current-layer="svg10" />
+  <!-- Floppy body with holes punched through -->
   <path
-     d="M60,40 H452 A20,20 0 0 1 472,60 V452 A20,20 0 0 1 452,472 H120 L40,392 V60 A20,20 0 0 1 60,40 Z"
-     fill="#FFD700"
-     stroke="black"
+     d="M122,40 H390 A82,82 0 0 1 472,122 V390 A82,82 0 0 1 390,472 H140 A20,20 0 0 1 126,466 L46,398 A20,20 0 0 1 40,384 V122 A82,82 0 0 1 122,40 Z"
+     fill="url(#yellow-gradient)"
+     stroke="#000000"
      stroke-width="14"
      stroke-linejoin="round"
-     id="path1" />
+     id="path1"
+     mask="url(#hole-mask)" />
+  <!-- Specular highlights -->
   <rect
-     x="51"
-     y="70"
-     width="12"
-     height="80"
-     rx="6"
+     x="50"
+     y="130"
+     width="20"
+     height="120"
+     rx="10"
      fill="#ffffff"
-     fill-opacity="0.5"
-     id="rect1" />
-  <rect
-     x="51"
-     y="320"
-     width="10"
-     height="40"
-     rx="5"
-     fill="#ffffff"
-     fill-opacity="0.4"
+     fill-opacity="0.7"
      id="rect2" />
   <rect
-     x="63"
-     y="63"
-     width="35"
-     height="35"
-     rx="5"
-     fill="#4b3f00"
-     stroke="#000000"
-     stroke-width="8"
+     x="50"
+     y="300"
+     width="16"
+     height="70"
+     rx="8"
+     fill="#ffffff"
+     fill-opacity="0.55"
      id="rect3" />
-  <rect
-     x="414"
-     y="63"
-     width="35"
-     height="35"
-     rx="5"
-     fill="#4b3f00"
+  <!-- Hole borders: position these in Inkscape, then report coordinates for mask -->
+  <circle
+     cx="106"
+     cy="96"
+     r="22"
+     fill="none"
      stroke="#000000"
-     stroke-width="8"
-     id="rect4" />
+     stroke-width="12"
+     id="hole-left"
+     inkscape:label="hole-left" />
+  <circle
+     cx="406"
+     cy="96"
+     r="22"
+     fill="none"
+     stroke="#000000"
+     stroke-width="12"
+     id="hole-right"
+     inkscape:label="hole-right" />
+  <!-- Sticker label (shortened, corners rounded to match outer shape) -->
   <rect
-     x="106"
-     y="100"
-     width="300"
-     height="200"
-     rx="25"
-     fill="#FFFBE6"
-     stroke="black"
+     x="130.50179"
+     y="112"
+     width="250.99643"
+     height="188"
+     rx="46"
+     fill="#fffbe6"
+     stroke="#000000"
      stroke-width="12"
      id="rect5" />
+  <!-- Metal slider -->
   <rect
      x="131"
      y="340"
@@ -93,7 +125,7 @@
      height="132"
      rx="20"
      fill="#E5E5E5"
-     stroke="black"
+     stroke="#000000"
      stroke-width="12"
      id="rect9" />
   <rect
@@ -102,12 +134,14 @@
      width="60"
      height="75"
      rx="10"
-     fill="#FFD700"
-     stroke="black"
+     fill="url(#yellow-gradient)"
+     stroke="#000000"
      stroke-width="8"
      id="rect10" />
+  <!-- Kawaii face -->
   <g
-     id="g1">
+     id="g1"
+     transform="matrix(0.81644503,0,0,0.81644503,46.572924,47.464915)">
     <circle
        cx="169.42451"
        cy="171.17914"
@@ -125,9 +159,9 @@
     <path
        d="m 222.95017,221.35943 q 33.45353,33.45353 66.90706,0"
        fill="none"
-       stroke="#000000"
        stroke-width="20.0721"
        stroke-linecap="round"
+       stroke="#000000"
        id="path9" />
   </g>
 </svg>
