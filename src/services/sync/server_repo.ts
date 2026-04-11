@@ -1,6 +1,13 @@
 import GLib from "gi://GLib";
 import Soup from "gi://Soup";
 
+export class AuthenticationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthenticationError";
+  }
+}
+
 const MIME_TYPES: Record<string, string> = {
   md: "text/markdown",
   url: "text/plain",
@@ -21,20 +28,18 @@ const MIME_TYPES: Record<string, string> = {
 export class ServerRepo {
   private _session: Soup.Session;
   private _baseUrl: string;
-  private _email: string;
-  private _password: string;
+  private _authHeader: string;
   private _encodedEmail: string;
 
   constructor(
     session: Soup.Session,
     baseUrl: string,
     email: string,
-    password: string
+    authHeader: string
   ) {
     this._session = session;
     this._baseUrl = baseUrl;
-    this._email = email;
-    this._password = password;
+    this._authHeader = authHeader;
     this._encodedEmail = encodeURIComponent(email);
   }
 
@@ -108,7 +113,7 @@ export class ServerRepo {
       uri: GLib.Uri.parse(url, GLib.UriFlags.NONE),
     });
 
-    message.request_headers.append("Authorization", this._createAuthHeader());
+    message.request_headers.append("Authorization", this._authHeader);
     message.request_headers.append(
       "Content-Type",
       `multipart/form-data; boundary=${boundary}`
@@ -124,6 +129,12 @@ export class ServerRepo {
       GLib.PRIORITY_DEFAULT,
       null
     );
+
+    if (message.status_code === Soup.Status.UNAUTHORIZED) {
+      throw new AuthenticationError(
+        `${message.status_code} ${message.reason_phrase}`
+      );
+    }
 
     if (
       message.status_code !== Soup.Status.CREATED &&
@@ -148,7 +159,7 @@ export class ServerRepo {
       uri: GLib.Uri.parse(url, GLib.UriFlags.NONE),
     });
 
-    message.request_headers.append("Authorization", this._createAuthHeader());
+    message.request_headers.append("Authorization", this._authHeader);
 
     const bytes = await this._session.send_and_read_async(
       message,
@@ -156,16 +167,16 @@ export class ServerRepo {
       null
     );
 
+    if (message.status_code === Soup.Status.UNAUTHORIZED) {
+      throw new AuthenticationError(
+        `${message.status_code} ${message.reason_phrase}`
+      );
+    }
+
     if (message.status_code !== Soup.Status.OK) {
       throw new Error(`${message.status_code} ${message.reason_phrase}`);
     }
 
     return bytes;
-  }
-
-  private _createAuthHeader(): string {
-    const credentials = `${this._email}:${this._password}`;
-    const encoded = GLib.base64_encode(new TextEncoder().encode(credentials));
-    return `Basic ${encoded}`;
   }
 }

@@ -5,57 +5,41 @@
   <template class="Gjs_PreferencesWindow" parent="AdwPreferencesWindow">
     <property name="title" translatable="yes">Preferences</property>
     <property name="default-width">500</property>
-    <property name="default-height">550</property>
+    <property name="default-height">600</property>
     <property name="search-enabled">false</property>
     <child>
       <object class="AdwPreferencesPage">
         <property name="title" translatable="yes">Sync</property>
         <property name="icon-name">update-symbolic</property>
+
+        <!-- Connected: shown when signed in -->
         <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Server</property>
-            <property name="description" translatable="yes">Configure synchronization with a server.</property>
+          <object class="AdwPreferencesGroup" id="connectedGroup">
+            <property name="title" translatable="yes">Connected</property>
             <child>
-              <object class="AdwEntryRow" id="serverUrlEntry">
-                <property name="title" translatable="yes">Server URL</property>
-                <property name="input-purpose">url</property>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Account</property>
-            <child>
-              <object class="AdwEntryRow" id="emailEntry">
-                <property name="title" translatable="yes">Email</property>
-                <property name="input-purpose">email</property>
-              </object>
-            </child>
-            <child>
-              <object class="AdwPasswordEntryRow" id="passwordEntry">
-                <property name="title" translatable="yes">Password</property>
+              <object class="AdwActionRow" id="connectedEmailRow">
+                <property name="title" translatable="yes">Signed in as</property>
+                <property name="subtitle">—</property>
+                <child type="prefix">
+                  <object class="GtkImage">
+                    <property name="icon-name">emblem-ok-symbolic</property>
+                    <style>
+                      <class name="success"/>
+                    </style>
+                  </object>
+                </child>
               </object>
             </child>
             <child>
               <object class="GtkBox">
                 <property name="orientation">horizontal</property>
-                <property name="spacing">8</property>
                 <property name="halign">end</property>
                 <property name="margin-top">8</property>
                 <child>
-                  <object class="GtkButton" id="clearCredentialsButton">
-                    <property name="label" translatable="yes">Clear</property>
+                  <object class="GtkButton" id="signOutButton">
+                    <property name="label" translatable="yes">Sign Out</property>
                     <style>
                       <class name="destructive-action"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkButton" id="saveCredentialsButton">
-                    <property name="label" translatable="yes">Save</property>
-                    <style>
-                      <class name="suggested-action"/>
                     </style>
                   </object>
                 </child>
@@ -63,9 +47,134 @@
             </child>
           </object>
         </child>
+
+        <!-- Sign In: shown when not signed in -->
         <child>
-          <object class="AdwPreferencesGroup">
-            <property name="title" translatable="yes">Status</property>
+          <object class="AdwPreferencesGroup" id="signInGroup">
+            <property name="title" translatable="yes">Sign In</property>
+            <child>
+              <object class="GtkBox">
+                <property name="orientation">vertical</property>
+                <property name="spacing">0</property>
+
+                <!-- OAuth provider buttons -->
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">vertical</property>
+                    <property name="spacing">8</property>
+                    <child>
+                      <object class="GtkButton" id="signInGoogleButton">
+                        <property name="label" translatable="yes">Sign In with Google</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="signInMicrosoftButton">
+                        <property name="label" translatable="yes">Sign In with Microsoft</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="signInAppleButton">
+                        <property name="label" translatable="yes">Sign In with Apple (Coming soon)</property>
+                        <property name="sensitive">false</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <!-- "or" divider -->
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="spacing">12</property>
+                    <property name="margin-top">16</property>
+                    <property name="margin-bottom">16</property>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="hexpand">true</property>
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="label" translatable="yes">or</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkSeparator">
+                        <property name="hexpand">true</property>
+                        <property name="valign">center</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <!-- Email/password form -->
+                <child>
+                  <object class="GtkListBox">
+                    <property name="selection-mode">none</property>
+                    <style>
+                      <class name="boxed-list"/>
+                    </style>
+                    <child>
+                      <object class="AdwEntryRow" id="emailEntry">
+                        <property name="title" translatable="yes">Email</property>
+                        <property name="input-purpose">email</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="AdwPasswordEntryRow" id="passwordEntry">
+                        <property name="title" translatable="yes">Password</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <!-- Sign In button -->
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="halign">end</property>
+                    <property name="margin-top">12</property>
+                    <child>
+                      <object class="GtkButton" id="signInPasswordButton">
+                        <property name="label" translatable="yes">Sign In</property>
+                        <style>
+                          <class name="suggested-action"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+                <!-- Sign Up -->
+                <child>
+                  <object class="GtkBox">
+                    <property name="orientation">horizontal</property>
+                    <property name="halign">center</property>
+                    <property name="margin-top">12</property>
+                    <child>
+                      <object class="GtkButton" id="signUpButton">
+                        <property name="label" translatable="yes">Don't have an account? Sign Up</property>
+                        <style>
+                          <class name="flat"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Actions: shown when signed in -->
+        <child>
+          <object class="AdwPreferencesGroup" id="actionsGroup">
+            <property name="title" translatable="yes">Actions</property>
             <child>
               <object class="AdwActionRow" id="syncStatusRow">
                 <property name="title" translatable="yes">Sync Status</property>
@@ -74,6 +183,47 @@
                   <object class="GtkButton" id="forceSyncButton">
                     <property name="label" translatable="yes">Force Sync</property>
                     <property name="valign">center</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- Server: always shown -->
+        <child>
+          <object class="AdwPreferencesGroup" id="serverGroup">
+            <property name="title" translatable="yes">Server</property>
+            <property name="description" translatable="yes">Configure synchronization with a server.</property>
+            <child>
+              <object class="AdwEntryRow" id="serverUrlEntry">
+                <property name="title" translatable="yes">Server URL</property>
+                <property name="input-purpose">url</property>
+              </object>
+            </child>
+            <!-- ngrok warning for private IP / localhost -->
+            <child>
+              <object class="GtkBox" id="ngrokWarningBox">
+                <property name="orientation">horizontal</property>
+                <property name="spacing">8</property>
+                <property name="margin-top">12</property>
+                <child>
+                  <object class="GtkImage">
+                    <property name="icon-name">dialog-warning-symbolic</property>
+                    <style>
+                      <class name="warning"/>
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="ngrokWarningLabel">
+                    <property name="wrap">true</property>
+                    <property name="xalign">0</property>
+                    <property name="hexpand">true</property>
+                    <style>
+                      <class name="dim-label"/>
+                      <class name="caption"/>
+                    </style>
                   </object>
                 </child>
               </object>

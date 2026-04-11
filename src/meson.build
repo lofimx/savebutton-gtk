@@ -12,6 +12,7 @@ sources = files(
   'models/tags_list.ts',
   'models/tile_widget.ts',
   'models/timestamp.ts',
+  'services/auth_service.ts',
   'services/file_service.ts',
   'services/logger.ts',
   'services/meta_service.ts',

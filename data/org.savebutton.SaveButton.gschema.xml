@@ -31,6 +31,21 @@
       <summary>Last Successful Sync</summary>
       <description>Timestamp of the last successful synchronization.</description>
     </key>
+    <key name="auth-method" type="s">
+      <default>'basic'</default>
+      <summary>Authentication Method</summary>
+      <description>The authentication method: "basic" for email/password, "token" for JWT tokens.</description>
+    </key>
+    <key name="auth-pkce-verifier" type="s">
+      <default>''</default>
+      <summary>PKCE Code Verifier</summary>
+      <description>Temporary PKCE code verifier for in-progress browser login flow.</description>
+    </key>
+    <key name="auth-email" type="s">
+      <default>''</default>
+      <summary>Authenticated Email</summary>
+      <description>The email address from the JWT token payload, set after token-based authentication.</description>
+    </key>
     <key name="native-host-port" type="i">
       <default>21420</default>
       <summary>Local Browser Sync Port</summary>

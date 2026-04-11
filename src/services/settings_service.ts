@@ -14,6 +14,7 @@ const IS_WINDOWS = KAYA_PLATFORM === "windows";
 
 const KEYCHAIN_SERVICE = "org.savebutton.SaveButton";
 const KEYCHAIN_ACCOUNT = "savebutton-server-password";
+const KEYCHAIN_REFRESH_TOKEN_ACCOUNT = "savebutton-refresh-token";
 
 function _macosGetPassword(): string | null {
   try {
@@ -89,12 +90,88 @@ function _macosClearPassword(): boolean {
   }
 }
 
+function _macosGetRefreshToken(): string | null {
+  try {
+    const [ok, stdout] = GLib.spawn_sync(
+      null,
+      [
+        "security",
+        "find-generic-password",
+        "-s",
+        KEYCHAIN_SERVICE,
+        "-a",
+        KEYCHAIN_REFRESH_TOKEN_ACCOUNT,
+        "-w",
+      ],
+      null,
+      GLib.SpawnFlags.SEARCH_PATH,
+      null
+    );
+    if (ok && stdout) {
+      const decoder = new TextDecoder("utf-8");
+      return decoder.decode(stdout).trim();
+    }
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+function _macosSetRefreshToken(token: string): boolean {
+  try {
+    const [ok] = GLib.spawn_sync(
+      null,
+      [
+        "security",
+        "add-generic-password",
+        "-U",
+        "-s",
+        KEYCHAIN_SERVICE,
+        "-a",
+        KEYCHAIN_REFRESH_TOKEN_ACCOUNT,
+        "-w",
+        token,
+      ],
+      null,
+      GLib.SpawnFlags.SEARCH_PATH,
+      null
+    );
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
+function _macosClearRefreshToken(): boolean {
+  try {
+    const [ok] = GLib.spawn_sync(
+      null,
+      [
+        "security",
+        "delete-generic-password",
+        "-s",
+        KEYCHAIN_SERVICE,
+        "-a",
+        KEYCHAIN_REFRESH_TOKEN_ACCOUNT,
+      ],
+      null,
+      GLib.SpawnFlags.SEARCH_PATH,
+      null
+    );
+    return ok;
+  } catch {
+    return false;
+  }
+}
+
 // --- Linux libsecret (conditional import) ---
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let Secret: any = null;
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let passwordSchema: any = null;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let refreshTokenSchema: any = null;
 
 if (!IS_MACOS && !IS_WINDOWS) {
   try {
@@ -105,6 +182,16 @@ if (!IS_MACOS && !IS_WINDOWS) {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     passwordSchema = new Secret.Schema(
       SECRET_SCHEMA_NAME,
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+      Secret.SchemaFlags.NONE,
+      {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+        application: Secret.SchemaAttributeType.STRING,
+      }
+    );
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    refreshTokenSchema = new Secret.Schema(
+      `${SECRET_SCHEMA_NAME}.RefreshToken`,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       Secret.SchemaFlags.NONE,
       {
@@ -172,6 +259,30 @@ export class SettingsService {
 
   set lastSyncSuccess(value: string) {
     this._settings.set_string("sync-last-success", value || "");
+  }
+
+  get authMethod(): string {
+    return this._settings.get_string("auth-method") || "basic";
+  }
+
+  set authMethod(value: string) {
+    this._settings.set_string("auth-method", value);
+  }
+
+  get authPkceVerifier(): string {
+    return this._settings.get_string("auth-pkce-verifier") || "";
+  }
+
+  set authPkceVerifier(value: string) {
+    this._settings.set_string("auth-pkce-verifier", value || "");
+  }
+
+  get authEmail(): string {
+    return this._settings.get_string("auth-email") || "";
+  }
+
+  set authEmail(value: string) {
+    this._settings.set_string("auth-email", value || "");
   }
 
   get nativeHostPort(): number {
@@ -248,6 +359,73 @@ export class SettingsService {
       return success as boolean;
     } catch (e) {
       logger.error(`Failed to clear password from keyring: ${e as string}`);
+      return false;
+    }
+  }
+
+  async getRefreshToken(): Promise<string | null> {
+    if (IS_MACOS) {
+      return _macosGetRefreshToken();
+    }
+    if (!Secret || !refreshTokenSchema) return null;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      const token = await Secret.password_lookup(
+        refreshTokenSchema,
+        { application: `${SECRET_SCHEMA_NAME}.RefreshToken` },
+        null
+      );
+      return token as string | null;
+    } catch (e) {
+      logger.error(
+        `Failed to retrieve refresh token from keyring: ${e as string}`
+      );
+      return null;
+    }
+  }
+
+  async setRefreshToken(token: string): Promise<boolean> {
+    if (IS_MACOS) {
+      return _macosSetRefreshToken(token);
+    }
+    if (!Secret || !refreshTokenSchema) return false;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      const success = await Secret.password_store(
+        refreshTokenSchema,
+        { application: `${SECRET_SCHEMA_NAME}.RefreshToken` },
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+        Secret.COLLECTION_DEFAULT,
+        "Save Button Refresh Token",
+        token,
+        null
+      );
+      return success as boolean;
+    } catch (e) {
+      logger.error(
+        `Failed to store refresh token in keyring: ${e as string}`
+      );
+      return false;
+    }
+  }
+
+  async clearRefreshToken(): Promise<boolean> {
+    if (IS_MACOS) {
+      return _macosClearRefreshToken();
+    }
+    if (!Secret || !refreshTokenSchema) return false;
+    try {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      const success = await Secret.password_clear(
+        refreshTokenSchema,
+        { application: `${SECRET_SCHEMA_NAME}.RefreshToken` },
+        null
+      );
+      return success as boolean;
+    } catch (e) {
+      logger.error(
+        `Failed to clear refresh token from keyring: ${e as string}`
+      );
       return false;
     }
   }

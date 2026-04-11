@@ -25,6 +25,8 @@
     <file>models/tile_widget.js.map</file>
     <file>models/timestamp.js</file>
     <file>models/timestamp.js.map</file>
+    <file>services/auth_service.js</file>
+    <file>services/auth_service.js.map</file>
     <file>services/logger.js</file>
     <file>services/logger.js.map</file>
     <file>services/file_service.js</file>
