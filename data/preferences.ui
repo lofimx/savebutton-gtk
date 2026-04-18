@@ -21,11 +21,8 @@
                 <property name="title" translatable="yes">Signed in as</property>
                 <property name="subtitle">—</property>
                 <child type="prefix">
-                  <object class="GtkImage">
-                    <property name="icon-name">emblem-ok-symbolic</property>
-                    <style>
-                      <class name="success"/>
-                    </style>
+                  <object class="GtkImage" id="connectedEmailIcon">
+                    <property name="pixel-size">24</property>
                   </object>
                 </child>
               </object>

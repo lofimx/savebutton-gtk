@@ -5,6 +5,10 @@
     <file>main.js.map</file>
     <file>models/anga.js</file>
     <file>models/anga.js.map</file>
+    <file>models/auth_provider.js</file>
+    <file>models/auth_provider.js.map</file>
+    <file>models/auth_state.js</file>
+    <file>models/auth_state.js.map</file>
     <file>models/clock.js</file>
     <file>models/clock.js.map</file>
     <file>models/dropped.js</file>

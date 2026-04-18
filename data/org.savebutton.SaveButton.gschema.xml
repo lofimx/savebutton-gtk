@@ -14,7 +14,7 @@
     <key name="sync-enabled" type="b">
       <default>false</default>
       <summary>Sync Enabled</summary>
-      <description>Whether synchronization with the Save Button Server is enabled.</description>
+      <description>Derived flag mirroring JWT token presence. Written only by AuthService on sign-in and sign-out. UI state is computed from auth-method + auth-email, not from this key.</description>
     </key>
     <key name="sync-in-progress" type="b">
       <default>false</default>
@@ -45,6 +45,11 @@
       <default>''</default>
       <summary>Authenticated Email</summary>
       <description>The email address from the JWT token payload, set after token-based authentication.</description>
+    </key>
+    <key name="auth-identity-provider" type="s">
+      <default>''</default>
+      <summary>Identity Provider</summary>
+      <description>The OAuth2 identity provider used for the current session (e.g. "google_oauth2", "microsoft_graph", "apple"). Empty string for email/password JWT logins.</description>
     </key>
     <key name="native-host-port" type="i">
       <default>21420</default>

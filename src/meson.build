@@ -2,6 +2,8 @@ gnome = import('gnome')
 
 sources = files(
   'models/anga.ts',
+  'models/auth_provider.ts',
+  'models/auth_state.ts',
   'models/clock.ts',
   'models/dropped.ts',
   'models/filename.ts',

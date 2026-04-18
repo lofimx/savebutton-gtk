@@ -114,6 +114,10 @@ export class Application extends Adw.Application {
       const iconTheme = Gtk.IconTheme.get_for_display(display);
       iconTheme.add_resource_path("/org/savebutton/SaveButton/icons");
     }
+
+    new SettingsService().warnIfLegacyBasicAuth().catch((e) => {
+      logger.error(`Legacy Basic Auth check failed: ${e as string}`);
+    });
   }
 
   vfunc_activate(): void {

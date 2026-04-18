@@ -5,6 +5,7 @@ import { AuthService } from "../services/auth_service.js";
 import { SettingsService } from "../services/settings_service.js";
 import { SyncService } from "../services/sync_service.js";
 import { logger } from "../services/logger.js";
+import { providerIconLabel } from "../models/auth_provider.js";
 
 const DEFAULT_SERVER_URL = "https://savebutton.com";
 
@@ -29,6 +30,7 @@ export class PreferencesWindow extends Adw.PreferencesWindow {
   // Connected state
   private declare _connectedGroup: Adw.PreferencesGroup;
   private declare _connectedEmailRow: Adw.ActionRow;
+  private declare _connectedEmailIcon: Gtk.Image;
   private declare _signOutButton: Gtk.Button;
 
   // Sign-in state
@@ -67,6 +69,7 @@ export class PreferencesWindow extends Adw.PreferencesWindow {
         InternalChildren: [
           "connectedGroup",
           "connectedEmailRow",
+          "connectedEmailIcon",
           "signOutButton",
           "signInGroup",
           "signInGoogleButton",
@@ -168,8 +171,17 @@ export class PreferencesWindow extends Adw.PreferencesWindow {
     this._actionsGroup.visible = isSignedIn;
 
     if (isSignedIn) {
+      const provider = this._settingsService.authIdentityProvider;
+      const { icon, label } = providerIconLabel(provider);
+      this._connectedEmailRow.title = `Signed in with ${label}`;
       this._connectedEmailRow.subtitle =
         this._settingsService.authEmail || "—";
+      this._connectedEmailIcon.set_from_icon_name(icon);
+      logger.log(
+        `DEBUG PreferencesWindow auth state: signedIn=true provider=${provider || "(email)"}`
+      );
+    } else {
+      logger.log("DEBUG PreferencesWindow auth state: signedIn=false");
     }
   }
 

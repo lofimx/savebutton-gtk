@@ -14,5 +14,8 @@
     <file preprocess="xml-stripblanks" alias="bookmark-filled-symbolic.svg">icons/bookmark-filled-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="update-symbolic.svg">icons/update-symbolic.svg</file>
     <file preprocess="xml-stripblanks" alias="globe-alt2-symbolic.svg">icons/globe-alt2-symbolic.svg</file>
+    <file preprocess="xml-stripblanks" alias="icon_google.svg">icons/icon_google.svg</file>
+    <file preprocess="xml-stripblanks" alias="icon_microsoft.svg">icons/icon_microsoft.svg</file>
+    <file preprocess="xml-stripblanks" alias="icon_apple.svg">icons/icon_apple.svg</file>
   </gresource>
 </gresources>

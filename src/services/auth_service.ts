@@ -28,6 +28,7 @@ interface TokenResponse {
   token_type: string;
   email?: string;
   user_email?: string;
+  identity_provider?: string;
 }
 
 export class AuthService {
@@ -265,6 +266,7 @@ export class AuthService {
     await this._settingsService.clearRefreshToken();
     this._settingsService.authMethod = "";
     this._settingsService.authEmail = "";
+    this._settingsService.authIdentityProvider = "";
     this._settingsService.syncEnabled = false;
   }
 
@@ -400,10 +402,11 @@ export class AuthService {
       this._extractEmailFromJwt(response.access_token);
     this._settingsService.authMethod = "token";
     this._settingsService.authEmail = email;
+    this._settingsService.authIdentityProvider = response.identity_provider || "";
     this._settingsService.syncEnabled = true;
 
     logger.log(
-      `INFO AuthService tokens stored for ${email}`
+      `INFO AuthService tokens stored for ${email} (provider=${response.identity_provider || "email"})`
     );
   }
 

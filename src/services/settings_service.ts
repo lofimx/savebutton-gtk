@@ -1,6 +1,7 @@
 import Gio from "gi://Gio";
 import GLib from "gi://GLib";
 import { logger } from "./logger.js";
+import { computeSignedIn } from "../models/auth_state.js";
 
 const DEFAULT_SERVER_URL = "https://savebutton.com";
 const SECRET_SCHEMA_NAME = "org.savebutton.SaveButton";
@@ -204,6 +205,8 @@ if (!IS_MACOS && !IS_WINDOWS) {
   }
 }
 
+let _legacyBasicAuthWarned = false;
+
 export class SettingsService {
   private _settings: Gio.Settings;
 
@@ -211,6 +214,23 @@ export class SettingsService {
     this._settings = new Gio.Settings({
       schema_id: "org.savebutton.SaveButton",
     });
+  }
+
+  /**
+   * Emit a one-shot log warning if the user still has Basic Auth credentials
+   * from a pre-JWT install. They'll see the Sign-In UI until they re-login.
+   * Basic Auth is retired in clients other than savebutton-web.
+   */
+  async warnIfLegacyBasicAuth(): Promise<void> {
+    if (_legacyBasicAuthWarned) return;
+    if (this.authMethod === "token") return;
+    const password = await this.getPassword();
+    if (password) {
+      _legacyBasicAuthWarned = true;
+      logger.log(
+        "WARN SettingsService found legacy Basic Auth password in keyring; Basic Auth is retired, user must re-login via Preferences"
+      );
+    }
   }
 
   get serverUrl(): string {
@@ -285,6 +305,14 @@ export class SettingsService {
     this._settings.set_string("auth-email", value || "");
   }
 
+  get authIdentityProvider(): string {
+    return this._settings.get_string("auth-identity-provider") || "";
+  }
+
+  set authIdentityProvider(value: string) {
+    this._settings.set_string("auth-identity-provider", value || "");
+  }
+
   get nativeHostPort(): number {
     return this._settings.get_int("native-host-port") || 21420;
   }
@@ -298,8 +326,21 @@ export class SettingsService {
     return url !== DEFAULT_SERVER_URL && url.length > 0;
   }
 
+  /**
+   * Whether the client holds a JWT token pair and should attempt to sync.
+   *
+   * Invariant: AuthService._storeTokens and AuthService.clearTokenAuth update
+   * authMethod, authEmail, authIdentityProvider, and the refresh token
+   * together, so reading authMethod + authEmail is synchronous-safe for UI
+   * state without a keyring round-trip.
+   *
+   * Basic Auth is retired in all clients other than savebutton-web.
+   */
   shouldSync(): boolean {
-    return this.syncEnabled;
+    return computeSignedIn({
+      authMethod: this.authMethod,
+      authEmail: this.authEmail,
+    });
   }
 
   async getPassword(): Promise<string | null> {

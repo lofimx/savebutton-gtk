@@ -193,71 +193,25 @@ export class NativeHostServer {
     }
   }
 
+  // The /config endpoint was originally used to bootstrap an extension-spawned
+  // Rust daemon. The desktop app is now installed and run independently of the
+  // extension, so accepting config pushes would silently clobber user state.
+  // The endpoint is retained but deprecated: any POST returns 410 Gone so a
+  // future extension build can detect the deprecation and stop sending.
   private _handleConfig(msg: Soup.ServerMessage): void {
-    try {
-      const requestBody = msg.get_request_body();
-      const bytes = requestBody.flatten();
-      const data = bytes.get_data();
+    logger.log(
+      "🟠 WARN NativeHostServer /config is deprecated; returning 410 Gone"
+    );
 
-      if (!data) {
-        msg.set_status(400, null);
-        msg.set_response(
-          "application/json",
-          Soup.MemoryUse.COPY,
-          new TextEncoder().encode('{"error":"Empty request body"}')
-        );
-        return;
-      }
-
-      const decoder = new TextDecoder("utf-8");
-      const json = decoder.decode(data);
-      const config = JSON.parse(json) as {
-        server?: string;
-        email?: string;
-        password?: string;
-      };
-
-      if (config.server) {
-        this._settingsService.serverUrl = config.server;
-      }
-      if (config.email) {
-        this._settingsService.email = config.email;
-      }
-      if (config.password) {
-        this._settingsService
-          .setPassword(config.password)
-          .then(() => {
-            this._settingsService.syncEnabled = true;
-            logger.log("🔵 INFO NativeHostServer config updated via POST /config");
-          })
-          .catch((e) => {
-            const error = e instanceof Error ? e.message : String(e);
-            logger.error(
-              `🔴 ERROR NativeHostServer failed to store password: ${error}`
-            );
-          });
-      } else {
-        this._settingsService.syncEnabled = true;
-      }
-
-      msg.set_status(200, null);
-      msg.set_response(
-        "application/json",
-        Soup.MemoryUse.COPY,
-        new TextEncoder().encode('{"ok":true}')
-      );
-    } catch (e) {
-      const error = e instanceof Error ? e.message : String(e);
-      logger.error(
-        `🔴 ERROR NativeHostServer config parsing failed: ${error}`
-      );
-      msg.set_status(400, null);
-      msg.set_response(
-        "application/json",
-        Soup.MemoryUse.COPY,
-        new TextEncoder().encode(`{"error":"Invalid JSON"}`)
-      );
-    }
+    msg.get_response_headers().append("Deprecation", "true");
+    msg.set_status(410, null);
+    msg.set_response(
+      "application/json",
+      Soup.MemoryUse.COPY,
+      new TextEncoder().encode(
+        '{"error":"deprecated","message":"The /config endpoint is no longer supported. Configure Save Button in its Preferences window."}'
+      )
+    );
   }
 
   private _handleInvalid(msg: Soup.ServerMessage, reason: string): void {
