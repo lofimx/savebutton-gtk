@@ -59,10 +59,10 @@
                                 <property name="margin-bottom">24</property>
                                 <property name="margin-start">12</property>
                                 <property name="margin-end">12</property>
-                                <!-- Bookmark / note entry -->
+                                <!-- Bookmark / blurb entry -->
                                 <child>
                                   <object class="GtkEntry" id="angaText">
-                                    <property name="placeholder-text" translatable="yes">Enter bookmark or note...</property>
+                                    <property name="placeholder-text" translatable="yes">Enter bookmark or blurb...</property>
                                     <property name="enable-emoji-completion">True</property>
                                   </object>
                                 </child>

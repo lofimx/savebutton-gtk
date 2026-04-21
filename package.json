@@ -1,7 +1,7 @@
 {
   "name": "savebutton",
   "version": "0.2.24",
-  "description": "Simple bookmark and notes manager",
+  "description": "Simple bookmark manager",
   "main": "src/main.ts",
   "repository": "https://github.com/lofimx/savebutton-gtk",
   "author": "Steven Deobald <sdeobald@gnome.org>",

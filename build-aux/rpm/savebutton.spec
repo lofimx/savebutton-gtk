@@ -1,7 +1,7 @@
 Name:           savebutton
 Version:        VERSION_PLACEHOLDER
 Release:        1%{?dist}
-Summary:        Simple bookmark and notes manager
+Summary:        Simple bookmark manager
 License:        AGPL-3.0-only
 URL:            https://github.com/lofimx/savebutton-gtk
 Source0:        %{name}-%{version}.tar.gz
@@ -27,8 +27,8 @@ Requires:       libadwaita
 Requires:       libsecret
 
 %description
-Save Button is a local-first note-taking and bookmarking
-application for GNOME desktop environments.
+Save Button is a local-first bookmarking application
+for GNOME desktop environments.
 
 %prep
 %autosetup -n savebutton-gtk-%{version}

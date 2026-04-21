@@ -223,7 +223,7 @@ export class EverythingWindow extends Adw.ApplicationWindow {
     date.add_css_class("tile-date");
     box.append(date);
 
-    // For notes/bookmarks, overlay the type icon in the upper-right
+    // For bookmarks/blurbs, overlay the type icon in the upper-right
     if (tile.overlayIcon) {
       const overlay = new Gtk.Overlay({ child: box });
       const icon = new Gtk.Image({

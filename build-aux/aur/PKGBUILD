@@ -2,7 +2,7 @@
 pkgname=savebutton
 pkgver=VERSION_PLACEHOLDER
 pkgrel=1
-pkgdesc='Simple bookmark and notes manager'
+pkgdesc='Simple bookmark manager'
 arch=('x86_64')
 url='https://github.com/lofimx/savebutton-gtk'
 license=('AGPL-3.0-only')

@@ -23,7 +23,7 @@ The Save Button architecture is defined in Architectural Decision Records, or AD
 
 The local disk is the only source of truth. Save Button's records ("anga") are stored in the following layout:
 
-* `~/.kaya/anga` = bookmarks, notes, PDFs, images, and other files (manual data)
+* `~/.kaya/anga` = bookmarks, blurbs, PDFs, images, and other files (manual data)
 * `~/.kaya/meta` = tags and metadata for anga records (manual data)
 * `~/.kaya/words` = words extracted by Save Button server for full-text search (generated data)
 

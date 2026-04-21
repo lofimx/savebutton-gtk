@@ -5,7 +5,7 @@
 # Synchronizes local ~/.kaya/ directory with the Save Button server API
 #
 # Directory structure:
-#   ~/.kaya/anga/  - bookmarks, notes, PDFs, images, and other files
+#   ~/.kaya/anga/  - bookmarks, blurbs, PDFs, images, and other files
 #   ~/.kaya/meta/  - human tags and metadata for anga records (TOML files)
 #   ~/.kaya/words/ - extracted text content for bookmarks (download-only)
 

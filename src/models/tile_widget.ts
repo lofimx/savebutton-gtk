@@ -13,7 +13,7 @@ const IMAGE_EXTENSIONS = new Set([
 
 const TYPE_ICONS: Record<string, string> = {
   bookmark: "bookmark-filled-symbolic",
-  note: "pin-symbolic",
+  blurb: "pin-symbolic",
   file: "text-x-generic-symbolic",
 };
 

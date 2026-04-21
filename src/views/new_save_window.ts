@@ -355,7 +355,7 @@ export class NewSaveWindow extends Adw.Window {
         this._fileService.saveDroppedFile(droppedFile);
         angaFilename = droppedFile.filename;
       } else {
-        // Save bookmark or note
+        // Save bookmark or blurb
         const text = this._angaText.text;
         const angaFile = new Anga(text, clock).toAngaFile();
         this._fileService.save(angaFile);

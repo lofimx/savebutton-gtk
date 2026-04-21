@@ -1,4 +1,4 @@
-export type AngaType = "bookmark" | "note" | "file";
+export type AngaType = "bookmark" | "blurb" | "file";
 
 export interface SearchResult {
   filename: string;
@@ -28,7 +28,7 @@ export class SearchResultFactory {
   static determineType(filename: string): AngaType {
     const ext = filename.split(".").pop()?.toLowerCase() || "";
     if (ext === "url") return "bookmark";
-    if (ext === "md") return "note";
+    if (ext === "md") return "blurb";
     return "file";
   }
 
@@ -43,7 +43,7 @@ export class SearchResultFactory {
     if (type === "file") {
       return withoutTimestamp;
     }
-    // Notes and bookmarks: strip extension, replace hyphens with spaces
+    // Bookmarks and blurbs: strip extension, replace hyphens with spaces
     const lastDot = withoutTimestamp.lastIndexOf(".");
     const withoutExtension =
       lastDot > 0 ? withoutTimestamp.substring(0, lastDot) : withoutTimestamp;
@@ -54,7 +54,7 @@ export class SearchResultFactory {
     if (type === "bookmark") {
       return SearchResultFactory.extractDomainFromUrl(contents);
     }
-    if (type === "note") {
+    if (type === "blurb") {
       const MAX_PREVIEW_LENGTH = 100;
       return contents.length > MAX_PREVIEW_LENGTH
         ? contents.substring(0, MAX_PREVIEW_LENGTH) + "..."

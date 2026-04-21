@@ -65,7 +65,7 @@
                               <object class="AdwStatusPage">
                                 <property name="icon-name">folder-documents-symbolic</property>
                                 <property name="title" translatable="yes">No items yet</property>
-                                <property name="description" translatable="yes">Save a bookmark or note to get started</property>
+                                <property name="description" translatable="yes">Save a bookmark or blurb to get started</property>
                               </object>
                             </property>
                           </object>

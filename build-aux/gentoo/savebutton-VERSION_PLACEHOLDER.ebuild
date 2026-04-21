@@ -5,7 +5,7 @@ EAPI=8
 
 inherit meson xdg
 
-DESCRIPTION="Simple bookmark and notes manager"
+DESCRIPTION="Simple bookmark manager"
 HOMEPAGE="https://github.com/lofimx/savebutton-gtk"
 SRC_URI="
 	https://github.com/lofimx/savebutton-gtk/archive/refs/tags/v${PV}.tar.gz -> ${P}.tar.gz

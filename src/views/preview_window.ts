@@ -26,7 +26,7 @@ export class PreviewWindow extends Adw.Window {
   private declare _faviconImage: Gtk.Image;
   private declare _bookmarkUrl: Gtk.Label;
   private declare _bookmarkButton: Gtk.Button;
-  private declare _noteLabel: Gtk.Label;
+  private declare _blurbLabel: Gtk.Label;
   private declare _imagePicture: Gtk.Picture;
   private declare _fileTypeIcon: Gtk.Image;
   private declare _fileTypeLabel: Gtk.Label;
@@ -58,7 +58,7 @@ export class PreviewWindow extends Adw.Window {
           "faviconImage",
           "bookmarkUrl",
           "bookmarkButton",
-          "noteLabel",
+          "blurbLabel",
           "imagePicture",
           "fileTypeIcon",
           "fileTypeLabel",
@@ -125,8 +125,8 @@ export class PreviewWindow extends Adw.Window {
       case "bookmark":
         this._setupBookmarkContent();
         break;
-      case "note":
-        this._setupNoteContent();
+      case "blurb":
+        this._setupBlurbContent();
         break;
       case "file":
         this._setupFileContent();
@@ -170,20 +170,20 @@ export class PreviewWindow extends Adw.Window {
     );
   }
 
-  private _setupNoteContent(): void {
-    this._contentStack.set_visible_child_name("note");
+  private _setupBlurbContent(): void {
+    this._contentStack.set_visible_child_name("blurb");
 
     try {
       const contents = this._fileService.readAngaContents(
         this._result.filename
       );
       const pangoMarkup = MarkdownRenderer.toPangoMarkup(contents);
-      this._noteLabel.set_markup(pangoMarkup);
+      this._blurbLabel.set_markup(pangoMarkup);
     } catch (e: unknown) {
       logger.error(
-        `🔴 ERROR PreviewWindow failed to read note: ${e as string}`
+        `🔴 ERROR PreviewWindow failed to read blurb: ${e as string}`
       );
-      this._noteLabel.set_label("Could not read note");
+      this._blurbLabel.set_label("Could not read blurb");
     }
   }
 

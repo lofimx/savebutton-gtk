@@ -28,8 +28,8 @@ URL=${this.text}
       } as AngaFile;
     }
     return {
-      filename: `${timestamp.plain}-note.md`,
-      filenameWithNanos: `${timestamp.withNanos}-note.md`,
+      filename: `${timestamp.plain}-blurb.md`,
+      filenameWithNanos: `${timestamp.withNanos}-blurb.md`,
       contents: this.text,
     } as AngaFile;
   }

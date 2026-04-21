@@ -11,10 +11,28 @@ describe("SearchResultFactory", () => {
       ).toBe("bookmark");
     });
 
-    it("identifies .md files as notes", () => {
+    it("identifies .md files as blurbs", () => {
       expect(
-        SearchResultFactory.determineType("2025-06-28T120000-note.md")
-      ).toBe("note");
+        SearchResultFactory.determineType("2025-06-28T120000-blurb.md")
+      ).toBe("blurb");
+    });
+
+    it("classifies legacy -note.md files as blurbs (pre-rename data)", () => {
+      // Existing user data created before the "note" → "blurb" rename uses
+      // the -note.md slug. Identification is by the .md extension; the slug
+      // is decorative. Legacy filenames must continue to be classified as
+      // blurbs.
+      expect(
+        SearchResultFactory.determineType("2024-01-01T120000-note.md")
+      ).toBe("blurb");
+    });
+
+    it("classifies -quote.md (context-menu writes) as blurbs", () => {
+      // The wxt extension's context menu writes -quote.md for text
+      // selections. These must also be classified as blurbs.
+      expect(
+        SearchResultFactory.determineType("2024-01-01T120000-quote.md")
+      ).toBe("blurb");
     });
 
     it("identifies other extensions as files", () => {
@@ -25,22 +43,22 @@ describe("SearchResultFactory", () => {
   });
 
   describe("extractDisplayTitle", () => {
-    it("strips timestamp and extension, replaces hyphens with spaces for notes", () => {
+    it("strips timestamp and extension, replaces hyphens with spaces for blurbs", () => {
       expect(
         SearchResultFactory.extractDisplayTitle(
-          "2025-06-28T120000-my-important-note.md",
-          "note"
+          "2025-06-28T120000-my-important-blurb.md",
+          "blurb"
         )
-      ).toBe("my important note");
+      ).toBe("my important blurb");
     });
 
-    it("handles nanosecond timestamps for notes", () => {
+    it("handles nanosecond timestamps for blurbs", () => {
       expect(
         SearchResultFactory.extractDisplayTitle(
-          "2026-01-21T164145_354000000-note.md",
-          "note"
+          "2026-01-21T164145_354000000-blurb.md",
+          "blurb"
         )
-      ).toBe("note");
+      ).toBe("blurb");
     });
 
     it("keeps hyphens and extension verbatim for files", () => {
@@ -70,12 +88,12 @@ describe("SearchResultFactory", () => {
       ).toBe("my bookmark");
     });
 
-    it("defaults to note/bookmark behavior when type is omitted", () => {
+    it("defaults to bookmark/blurb behavior when type is omitted", () => {
       expect(
         SearchResultFactory.extractDisplayTitle(
-          "2025-06-28T120000-my-important-note.md"
+          "2025-06-28T120000-my-important-blurb.md"
         )
-      ).toBe("my important note");
+      ).toBe("my important blurb");
     });
   });
 
@@ -84,8 +102,8 @@ describe("SearchResultFactory", () => {
       expect(SearchResultFactory.isTitleVisible("bookmark")).toBe(false);
     });
 
-    it("returns false for notes", () => {
-      expect(SearchResultFactory.isTitleVisible("note")).toBe(false);
+    it("returns false for blurbs", () => {
+      expect(SearchResultFactory.isTitleVisible("blurb")).toBe(false);
     });
 
     it("returns true for files", () => {
@@ -96,14 +114,14 @@ describe("SearchResultFactory", () => {
   describe("extractDate", () => {
     it("extracts date from filename timestamp", () => {
       expect(
-        SearchResultFactory.extractDate("2025-06-28T120000-note.md")
+        SearchResultFactory.extractDate("2025-06-28T120000-blurb.md")
       ).toBe("2025-06-28");
     });
 
     it("extracts date from nanosecond timestamp", () => {
       expect(
         SearchResultFactory.extractDate(
-          "2026-01-21T164145_354000000-note.md"
+          "2026-01-21T164145_354000000-blurb.md"
         )
       ).toBe("2026-01-21");
     });
@@ -121,20 +139,20 @@ describe("SearchResultFactory", () => {
       expect(result.date).toBe("2025-06-28");
     });
 
-    it("creates a note SearchResult with text preview", () => {
+    it("creates a blurb SearchResult with text preview", () => {
       const result = SearchResultFactory.fromFile(
-        "2025-06-28T120000-note.md",
-        "Hello world, this is my note"
+        "2025-06-28T120000-blurb.md",
+        "Hello world, this is my blurb"
       );
-      expect(result.type).toBe("note");
-      expect(result.contentPreview).toBe("Hello world, this is my note");
-      expect(result.displayTitle).toBe("note");
+      expect(result.type).toBe("blurb");
+      expect(result.contentPreview).toBe("Hello world, this is my blurb");
+      expect(result.displayTitle).toBe("blurb");
     });
 
-    it("truncates long note previews", () => {
+    it("truncates long blurb previews", () => {
       const longText = "a".repeat(150);
       const result = SearchResultFactory.fromFile(
-        "2025-06-28T120000-note.md",
+        "2025-06-28T120000-blurb.md",
         longText
       );
       expect(result.contentPreview).toBe("a".repeat(100) + "...");

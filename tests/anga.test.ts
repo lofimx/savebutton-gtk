@@ -15,10 +15,10 @@ URL=https://deobald.ca
     });
   });
 
-  it("should save non-http as text notes", () => {
+  it("should save non-http as text blurbs", () => {
     expect(new Anga("42", clock).toAngaFile()).toStrictEqual({
-      filename: "2005-08-09T123456-note.md",
-      filenameWithNanos: "2005-08-09T123456_000000000-note.md",
+      filename: "2005-08-09T123456-blurb.md",
+      filenameWithNanos: "2005-08-09T123456_000000000-blurb.md",
       contents: "42",
     });
   });

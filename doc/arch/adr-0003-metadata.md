@@ -2,7 +2,7 @@
 
 ## Context
 
-Because bookmarks, notes, and other files are immutable and the `~/.kaya/anga` directory is append-only, we want somewhere save to collect metadata about those files.
+Because bookmarks, blurbs, and other files are immutable and the `~/.kaya/anga` directory is append-only, we want somewhere save to collect metadata about those files.
 
 ## Decision
 

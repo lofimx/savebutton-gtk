@@ -1,10 +1,9 @@
 name: savebutton
 adopt-info: savebutton
-summary: Simple bookmark and notes manager
+summary: Simple bookmark manager
 description: |
-  Save Button is a simple, immutable, local-first note-taking
-  and bookmarking app. Store, search, and sync your notes
-  and bookmarks.
+  Save Button is a simple, immutable, local-first bookmarking
+  app. Store, search, and sync your bookmarks and blurbs.
 grade: stable
 confinement: strict
 base: core24

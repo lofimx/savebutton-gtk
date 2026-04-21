@@ -14,9 +14,9 @@ describe("TileWidget", () => {
     expect(tile.showImage).toBe(false);
   });
 
-  it("note tile: no title, overlay icon, pin icon", () => {
+  it("blurb tile: no title, overlay icon, pin icon", () => {
     const result = SearchResultFactory.fromFile(
-      "2025-06-28T120000-my-note.md",
+      "2025-06-28T120000-my-blurb.md",
       "Hello world"
     );
     const tile = new TileWidget(result);
