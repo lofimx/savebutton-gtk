@@ -1,6 +1,6 @@
 project(
   'savebutton',
-  version: '0.2.24',
+  version: '0.2.25',
   meson_version: '>= 0.62.0',
   default_options: [
     'warning_level=2',
